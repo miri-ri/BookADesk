@@ -1,10 +1,14 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function Useraccount() {
+
   return (
-    <>
-      <h2>Useraccount:</h2>
-    </>
+    <Router>
+      <>
+        <h2>Useraccount:</h2>
+      </>
+    </Router>
   );
 }
 
