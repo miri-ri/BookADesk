@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import './Header.css'
-import logo from './logo.png';
 
 function Header() {
   const accountButton = (
