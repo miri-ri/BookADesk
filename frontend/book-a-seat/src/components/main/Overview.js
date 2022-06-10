@@ -13,7 +13,7 @@ function Overview({ toUserDetails }) {
 
   return (
     <>
-      <p>Overwiew:</p>
+      <p>Overview:</p>
       {detailsButtonElement}
       {logoutButtonElement}
     </>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Welcome from "./components/main/Welcome";
@@ -36,10 +36,26 @@ function App() {
     navigate("/overview");
   };
 
+  // TODO: replace with authentication
+  const fetchUserByID = async (id) => {
+    const res = await fetch("http://localhost:8000/users/users/" + id);
+    const userData = await res.json();
+    return userData;
+  };
+
   const sendLoginRequest = ({ email, password }) => {
-    console.log("todo: send login request:", email, password);
-    setUser(dummyUser);
-    toOverview();
+    let userID = 2;
+    const getUser = async () => {
+      const userFromServer = await fetchUserByID(userID);
+      if (userFromServer) {
+        console.log("successful login:", userFromServer);
+        setUser(userFromServer);
+        toOverview();
+      } else {
+        console.log("an error occured loggin in");
+      }
+    };
+    getUser();
   };
 
   const sendRegisterRequest = (userData) => {
