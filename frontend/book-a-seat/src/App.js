@@ -8,15 +8,6 @@ import RegisterForm from "./components/useraccount/RegisterForm";
 import LoginForm from "./components/useraccount/LoginForm";
 import Overview from "./components/main/Overview";
 
-const dummyUser = {
-  email: "someting@gmail.com",
-  password: "password",
-  username: "flo123",
-  firstName: "Florian",
-  lastName: "Vogel",
-  admin: "false",
-};
-
 function App() {
   const [user, setUser] = useState("");
 
@@ -43,7 +34,8 @@ function App() {
     return userData;
   };
 
-  const sendLoginRequest = ({ email, password }) => {
+  // TODO: error handling
+  const login = ({ email, password }) => {
     let userID = 2;
     const getUser = async () => {
       const userFromServer = await fetchUserByID(userID);
@@ -58,18 +50,46 @@ function App() {
     getUser();
   };
 
-  const sendRegisterRequest = (userData) => {
-    console.log("todo: send register request:", userData);
-    setUser(userData);
-    toOverview();
+  const dispatchAddUserRequest = async (user) => {
+    const res = await fetch("http://localhost:8000/users/users/", {
+      method: "POST",
+      // headers: {
+      //   "Content-type": "application/json",
+      // },
+      body: JSON.stringify(user),
+    });
+    console.log(res);
+    const userData = await res.json();
+    console.log(userData);
+    return userData;
+  };
+
+  const register = (userData) => {
+    const user = {
+      first_name: userData.firstName,
+      last_name: userData.lastName,
+      username: userData.username,
+      email: userData.email,
+      // password: userData.password
+      // admin: false,
+    };
+    console.log(user);
+    const addUser = async () => {
+      const userData = await dispatchAddUserRequest(user);
+      if (userData) {
+        setUser(userData);
+        toOverview();
+      }
+    };
+    addUser();
   };
 
   const welcomeElement = <Welcome toLogin={toLogin} />;
   const loginElement = (
-    <LoginForm toRegister={toRegister} sendLoginRequest={sendLoginRequest} />
+    <LoginForm toRegister={toRegister} sendLoginRequest={login} />
   );
   const registerElement = (
-    <RegisterForm toLogin={toLogin} sendRegisterRequest={sendRegisterRequest} />
+    <RegisterForm toLogin={toLogin} sendRegisterRequest={register} />
   );
   const accountDetailsElement = <AccountDetails user={user} />;
   const overviewElement = <Overview toUserDetails={toDetails} />;
