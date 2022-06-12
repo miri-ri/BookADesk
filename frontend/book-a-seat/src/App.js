@@ -8,6 +8,8 @@ import RegisterForm from "./components/useraccount/RegisterForm";
 import LoginForm from "./components/useraccount/LoginForm";
 import Overview from "./components/main/Overview";
 import Reservation from "./components/reservations/Reservation";
+import Workplace from "./components/workplace/Workplace";
+import EditForm from "./components/useraccount/EditForm";
 
 function App() {
   const [user, setUser] = useState("");
@@ -28,6 +30,14 @@ function App() {
     navigate("/overview");
   };
 
+  const toWorkplace = () => {
+    navigate("/workplace");
+  };
+
+  const toEdit = () => {
+    navigate("/user/details/edit");
+  };
+
   // TODO: replace with authentication
   const fetchUserByID = async (id) => {
     const res = await fetch("http://localhost:8000/users/users/" + id);
@@ -42,7 +52,12 @@ function App() {
       const userFromServer = await fetchUserByID(userID);
       if (userFromServer) {
         console.log("successful login:", userFromServer);
-        setUser(userFromServer);
+        setUser({
+          firstName: userFromServer.first_name,
+          lastName: userFromServer.last_name,
+          username: userFromServer.username,
+          email: userFromServer.email,
+        });
         toOverview();
       } else {
         console.log("an error occured loggin in");
@@ -76,13 +91,25 @@ function App() {
     };
     console.log(user);
     const addUser = async () => {
-      const userData = await dispatchAddUserRequest(user);
-      if (userData) {
-        setUser(userData);
+      const userFromServer = await dispatchAddUserRequest(user);
+      if (userFromServer) {
+        console.log("successful login:", userFromServer);
+        setUser({
+          firstName: userFromServer.first_name,
+          lastName: userFromServer.last_name,
+          username: userFromServer.username,
+          email: userFromServer.email,
+        });
         toOverview();
+      } else {
+        console.log("an error occured during registration");
       }
     };
     addUser();
+  };
+
+  const update = (userData) => {
+    console.log("update", userData);
   };
 
   const welcomeElement = <Welcome toLogin={toLogin} />;
@@ -92,12 +119,23 @@ function App() {
   const registerElement = (
     <RegisterForm toLogin={toLogin} sendRegisterRequest={register} />
   );
-  const accountDetailsElement = <AccountDetails user={user} />;
-  const overviewElement = <Overview toUserDetails={toDetails} />;
+  const accountDetailsElement = (
+    <AccountDetails user={user} toOverview={toOverview} toEdit={toEdit} />
+  );
+  const overviewElement = (
+    <Overview
+      toUserDetails={toDetails}
+      toWorkplace={toWorkplace}
+      toOverview={toOverview}
+    />
+  );
+  const workplaceElement = <Workplace />;
+  const reservationElement = <Reservation />;
+  const accountEditElement = (
+    <EditForm user={user} sendUpdateRequest={update} toDetails={toDetails} />
+  );
 
   const navigate = useNavigate();
-
-  const reservationElement = <Reservation />
 
   return (
     <>
@@ -107,8 +145,10 @@ function App() {
         <Route path="/user/login" element={loginElement} />
         <Route path="/user/register" element={registerElement} />
         <Route path="/user/details" element={accountDetailsElement} />
+        <Route path="/user/details/edit" element={accountEditElement} />
         <Route path="/overview" element={overviewElement} />
         <Route path="/reservation" element={reservationElement} />
+        <Route path="/workplace" element={workplaceElement} />
       </Routes>
     </>
   );
