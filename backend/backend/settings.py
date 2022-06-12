@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'rest_framework',
-    'workplace'
+    'workplace',
+     'reservation.apps.ReservationConfig'
+
 ]
 
 MIDDLEWARE = [
