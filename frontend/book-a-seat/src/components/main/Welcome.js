@@ -7,7 +7,7 @@ function Welcome({ toLogin }) {
   return (
     <>
       <p>representative image</p>
-      <p>descriptive text</p>
+      <p>On this website you can book your workspace.</p>
       {loginButtonElement}
     </>
   );

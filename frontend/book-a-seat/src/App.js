@@ -48,6 +48,10 @@ function App() {
     navigate("/workspace/create-workspace");
   };
 
+  const toReservation = () => {
+    navigate("/reservation");
+  };
+
   // TODO: respace with authentication
   const fetchUserByID = async (id) => {
     const res = await fetch("http://localhost:8000/users/users/" + id);
@@ -144,6 +148,7 @@ function App() {
     <Overview
       toUserDetails={toDetails}
       toWorkspace={toWorkspace}
+      toReservation={toReservation}
       toOverview={toOverview}
     />
   );
@@ -175,7 +180,7 @@ function App() {
   const navigate = useNavigate();
 
   return (
-    <>
+    <div className="main-container">
       <Header />
       <Routes>
         <Route path="/" element={welcomeElement} />
@@ -196,7 +201,7 @@ function App() {
           toWorkspace={toWorkspace}
         />
       </Routes>
-    </>
+    </div>
   );
 }
 
