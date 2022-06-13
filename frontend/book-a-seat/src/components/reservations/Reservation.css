@@ -1,0 +1,38 @@
+.res-table {
+	margin-left: auto;
+	margin-right:auto;
+	margin: 30px;
+}
+
+.res-sidebar {
+	min-width: 120px;
+	float: left; 
+	text-align: center;
+}
+
+.res-header {
+	display: flex;
+	background-color:aqua;
+}
+
+.res-header-col {
+	width: 93%;
+	text-align: center;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
+}
+
+.res-content {
+	display: flex;
+	color: black;
+}
+
+.res-content-col {
+	width: 100%;
+	text-align: center;
+}
+
+#times {
+	float: left;
+}

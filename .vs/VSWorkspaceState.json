@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\frontend",
+    "\\frontend\\book-a-seat",
+    "\\frontend\\book-a-seat\\public",
+    "\\frontend\\book-a-seat\\src",
+    "\\frontend\\book-a-seat\\src\\components",
+    "\\frontend\\book-a-seat\\src\\components\\main",
+    "\\frontend\\book-a-seat\\src\\components\\reservations",
+    "\\frontend\\book-a-seat\\src\\components\\ui-common",
+    "\\frontend\\book-a-seat\\src\\components\\useraccount"
+  ],
+  "PreviewInSolutionExplorer": false
+}

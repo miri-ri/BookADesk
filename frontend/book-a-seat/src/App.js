@@ -7,6 +7,7 @@ import AccountDetails from "./components/useraccount/AccountDetails";
 import RegisterForm from "./components/useraccount/RegisterForm";
 import LoginForm from "./components/useraccount/LoginForm";
 import Overview from "./components/main/Overview";
+import Reservation from "./components/reservations/Reservation";
 
 function App() {
   const [user, setUser] = useState("");
@@ -96,6 +97,8 @@ function App() {
 
   const navigate = useNavigate();
 
+  const reservationElement = <Reservation />
+
   return (
     <>
       <Header />
@@ -105,6 +108,7 @@ function App() {
         <Route path="/user/register" element={registerElement} />
         <Route path="/user/details" element={accountDetailsElement} />
         <Route path="/overview" element={overviewElement} />
+        <Route path="/reservation" element={reservationElement} />
       </Routes>
     </>
   );
