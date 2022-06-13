@@ -8,8 +8,10 @@ import RegisterForm from "./components/useraccount/RegisterForm";
 import LoginForm from "./components/useraccount/LoginForm";
 import Overview from "./components/main/Overview";
 import Reservation from "./components/reservations/Reservation";
-import Workplace from "./components/workplace/Workplace";
+import Workspace from "./components/workspace/Workspace";
 import EditForm from "./components/useraccount/EditForm";
+import CreateWorkspaceForm from "./components/workspace/CreateWorkspaceForm";
+import CreateGroupForm from "./components/workspace/CreateGroupForm";
 
 function App() {
   const [user, setUser] = useState("");
@@ -30,15 +32,23 @@ function App() {
     navigate("/overview");
   };
 
-  const toWorkplace = () => {
-    navigate("/workplace");
+  const toWorkspace = () => {
+    navigate("/workspace");
   };
 
   const toEdit = () => {
     navigate("/user/details/edit");
   };
 
-  // TODO: replace with authentication
+  const toCreateGroup = () => {
+    navigate("/workspace/create-group");
+  };
+
+  const toCreateWorkspace = () => {
+    navigate("/workspace/create-workspace");
+  };
+
+  // TODO: respace with authentication
   const fetchUserByID = async (id) => {
     const res = await fetch("http://localhost:8000/users/users/" + id);
     const userData = await res.json();
@@ -108,8 +118,16 @@ function App() {
     addUser();
   };
 
-  const update = (userData) => {
+  const updateUser = (userData) => {
     console.log("update", userData);
+  };
+
+  const addWorkspace = (data) => {
+    console.log("create workspace", data);
+  };
+
+  const addGroup = (data) => {
+    console.log("create group", data);
   };
 
   const welcomeElement = <Welcome toLogin={toLogin} />;
@@ -125,14 +143,33 @@ function App() {
   const overviewElement = (
     <Overview
       toUserDetails={toDetails}
-      toWorkplace={toWorkplace}
+      toWorkspace={toWorkspace}
       toOverview={toOverview}
     />
   );
-  const workplaceElement = <Workplace />;
+  const workspaceElement = (
+    <Workspace
+      toCreateGroup={toCreateGroup}
+      toCreateWorkspace={toCreateWorkspace}
+      toOverview={toOverview}
+    />
+  );
   const reservationElement = <Reservation />;
   const accountEditElement = (
-    <EditForm user={user} sendUpdateRequest={update} toDetails={toDetails} />
+    <EditForm
+      user={user}
+      sendUpdateRequest={updateUser}
+      toDetails={toDetails}
+    />
+  );
+  const createWorkspaceElement = (
+    <CreateWorkspaceForm
+      sendCreateRequest={addWorkspace}
+      toWorkspace={toWorkspace}
+    />
+  );
+  const createGroupElement = (
+    <CreateGroupForm sendCreateRequest={addGroup} toWorkspace={toWorkspace} />
   );
 
   const navigate = useNavigate();
@@ -148,7 +185,16 @@ function App() {
         <Route path="/user/details/edit" element={accountEditElement} />
         <Route path="/overview" element={overviewElement} />
         <Route path="/reservation" element={reservationElement} />
-        <Route path="/workplace" element={workplaceElement} />
+        <Route path="/workspace" element={workspaceElement} />
+        <Route
+          path="/workspace/create-workspace"
+          element={createWorkspaceElement}
+        />
+        <Route
+          path="/workspace/create-group"
+          element={createGroupElement}
+          toWorkspace={toWorkspace}
+        />
       </Routes>
     </>
   );

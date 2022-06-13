@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../ui-common/Button";
 
-function Overview({ toUserDetails, toWorkplace }) {
+function Overview({ toUserDetails, toWorkspace }) {
   const logout = () => {
     console.log("logout");
   };
@@ -9,17 +9,17 @@ function Overview({ toUserDetails, toWorkplace }) {
   const detailsButtonElement = (
     <Button title="Show User Details" onClick={toUserDetails} />
   );
-  const workplaceButtonElement = (
-    <Button title={"Show Workplace"} onClick={toWorkplace} />
+  const workspaceButtonElement = (
+    <Button title={"Show Workspace"} onClick={toWorkspace} />
   );
   const logoutButtonElement = <Button title="Logout" onBlick={logout} />;
 
-  // TODO: show workplaceButtonElement only if admin
+  // TODO: show workspaceButtonElement only if admin
   return (
     <>
       <p>Overview:</p>
       {detailsButtonElement}
-      {workplaceButtonElement}
+      {workspaceButtonElement}
       {logoutButtonElement}
     </>
   );
