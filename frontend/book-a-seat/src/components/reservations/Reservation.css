@@ -11,19 +11,22 @@
 	text-align: center;
 	width:120px;
 	min-width:120px;
-	background-color: rgb(233, 255, 255);
 }
 
 .cell, .cell-booked, .t-row, .t-head{       
 	border: 2px solid #d3d3d3;
 }
 
-.t-head {
+.t-head, .sidebar {
 	background-color: rgb(233, 255, 255);
 }
 
 .cell-booked {
-	background-color: rgba(255, 47, 0, 0.662);
+	background-color: rgb(45, 104, 104);
+}
+
+.cell-booked-user {
+	background-color: rgb(41, 202, 162);
 }
 
 .td {
