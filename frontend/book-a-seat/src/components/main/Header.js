@@ -30,12 +30,12 @@ function Header() {
         <div className="header-left">
           <h2>Book a Desk</h2>
         </div>
-        {/*           <div class="header-right">
+        {<div class="header-right">
             <div class="btn-group" role="group">
                 {accountButton}
                 {ReservationsButton}
             </div>
-          </div> */}
+          </div>}
       </div>
     </>
   );
