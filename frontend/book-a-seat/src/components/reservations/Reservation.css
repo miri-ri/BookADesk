@@ -22,13 +22,31 @@
 }
 
 .cell-booked {
-	background-color: rgb(45, 104, 104);
+	background-color: rgba(189, 212, 212, 0.747);
 }
 
 .cell-booked-user {
-	background-color: rgb(41, 202, 162);
+	background-color: rgba(62, 154, 131, 0.599);
+}
+
+.cell-selected {
+	background-color: orange;
 }
 
 .td {
 	padding:0;
+}
+
+.saveButton {
+	float: right;
+	margin: 2%;
+	background-color: transparent;
+	border: 1px solid;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-weight: bold;
+}
+
+.div-hidden {
+	display: none;
 }

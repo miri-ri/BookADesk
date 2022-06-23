@@ -4,6 +4,20 @@ import './Reservation.css'
 const amountShownDays = 7;
 const testUserID = 2;
 
+const saveButton = (
+  <>
+    <div id="saveButtonDiv" class="div-hidden">
+      <button 
+      id="saveButton" 
+      class="saveButton" 
+      onClick={saveChanges}>
+        Save Changes
+      </button>
+      <br></br>
+    </div>
+  </>
+)
+
 let reservations = [
   {
     id: 1,
@@ -88,6 +102,7 @@ function Reservation() {
           ))}
         </tbody>
       </table>
+      {saveButton}
     </>
   )
 
@@ -96,20 +111,62 @@ function Reservation() {
     <>
       <h2>Reservation:</h2>
         {table}
-      <h2>My Reservations:</h2>
         {myReservations}
     </>
   );
 }
 
-function doSmth(text) {
-  console.log(text)  
-  return (
-    <div class="popup">
-      <p>Hello!</p>
-      <button>Close Popup</button>
-    </div>
-  );
+var selectedSlots_ID=[]
+
+function selectSlotToAdd(id) {
+  var e = document.getElementById(id);
+  var button = document.getElementById("saveButtonDiv")
+  if(e.className==="cell-selected") {
+    e.className="cell"
+    selectedSlots_ID = selectedSlots_ID.filter(i => i !== id)
+    if(selectedSlots_ID.length===0){
+      button.className="div-hidden"
+    }
+  } else {
+    e.className = "cell-selected"
+    selectedSlots_ID.push(id);
+    button.className="div"
+  }
+  console.log("Selected Slots: " + selectedSlots_ID)
+}
+
+function editSlot(workplace, date, time, id) {
+  var e = document.getElementById(id);
+  e.className = "cell-selected"
+}
+
+function saveChanges(){
+  /*var cutWorkplace = selectedSlots_ID.map(id => (id.split('_')[0] +"_"+ id.split('_')[1]))
+  var findDuplicates = cutWorkplace => cutWorkplace.filter((item, index) => cutWorkplace.indexOf(item) !== index)
+
+  var c = 0;
+  var duplicats = [];
+
+  selectedSlots_ID.map(id => findDuplicates(cutWorkplace).filter(d => d===id.split('_')[0] +"_"+ id.split('_')[1])).map(item => {
+    if(item.length!=0){
+      item = selectedSlots_ID[c]
+      duplicats.push(item)
+    }
+    c++;
+  })
+  var resWithoutDuplicats = selectedSlots_ID
+  console.log(duplicats)*/
+
+  var test = selectedSlots_ID.map(e => [parseInt(e.split('_')[0]), parseInt(e.split('_')[1]), parseInt(e.split('_')[2])])
+  var test2 = test.map(i => {
+    var later = [i[0], i[1], i[2]+1]
+    if(test.filter(f => later[0]==f[0] && later[1]==f[1] && later[2]==f[2]).length!=0){
+      console.log("earlier(i): " + i + ", later: " + later)
+      return i;
+    }
+  })
+  console.log(test)
+  console.log(test2)
 }
 
 var diffDays = 0;
@@ -120,28 +177,28 @@ function checkBooked(workplace, day, time) {
   let datepieces = day.split('.');
   var date = new Date(datepieces[2]+"-"+datepieces[1]+"-"+datepieces[0]);
 
-  if(startDay==""){
+  if(startDay===""){
     startDay=date;
   } 
   diffDays=(date-startDay)/(1000*60*60*24);
   
 
   var id = diffDays + "_" + workplace + "_" + time;
-  var output = <td id={id} class="cell" onClick={() => doSmth("Hello World!")}></td>;
+  var output = <td id={id} class="cell" onClick={() => selectSlotToAdd(id)}></td>;
 
   reservations.forEach((r) => {
     var classCellBooked = "cell-booked"
-    if(r.user_id==testUserID){
+    if(r.user_id===testUserID){
       classCellBooked = "cell-booked-user"
     }
     var r_date = new Date(r.start);
     if(r.seat_id==workplace){
-      if(date.getDate()==r_date.getDate() && date.getMonth()==r_date.getMonth() && date.getFullYear()==r_date.getFullYear()){
-        if(r_date.getHours()==time){
+      if(date.getDate()===r_date.getDate() && date.getMonth()===r_date.getMonth() && date.getFullYear()===r_date.getFullYear()){
+        if(r_date.getHours()===time){
           var end = r_date.getHours() + r.duration;
           id = diffDays + "_" + workplace + "_" + time + "-" + (time+r.duration-1);
           if(time>=r_date.getHours() && time<end){
-            output = <td id={id} class={classCellBooked} rowSpan={r.duration}></td>;
+            output = <td id={id} class={classCellBooked} rowSpan={r.duration} onClick={() => editSlot(workplace, date, time, id)}></td>;
           }
         } else if (time>=r_date.getHours() && r_date.getHours()+r.duration>time){
           output = "";
@@ -156,6 +213,8 @@ const r = reservations.filter(checkUser)
 
 const myReservations = (
   <>
+    <br></br>
+    <h2>My Reservations:</h2>
       <table class="table">
         <thead>
           <tr>
@@ -185,7 +244,7 @@ function getDateFormat(date) {
 }
 
 function checkUser(res){
-  return res.user_id==testUserID;
+  return res.user_id===testUserID;
 }
 
 
