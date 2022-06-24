@@ -1,0 +1,13 @@
+.btn-classic {
+  background-color: gray;
+  color: white;
+}
+
+.btn-classic:hover {
+  background-color: rgb(102, 102, 102);
+  color: white;
+}
+
+.btn:focus {
+    box-shadow: none;
+}
