@@ -1,11 +1,7 @@
 import React from "react";
 import Button from "../ui-common/Button";
 
-function Overview({ toUserDetails, toWorkspace, toReservation }) {
-  const logout = () => {
-    console.log("logout");
-  };
-
+function Overview({ toUserDetails, toWorkspace, toReservation, logout }) {
   const detailsButtonElement = (
     <Button title="Show User Details" onClick={toUserDetails} />
   );
@@ -15,7 +11,7 @@ function Overview({ toUserDetails, toWorkspace, toReservation }) {
   const reservationButtonElement = (
     <Button title="Show Reservations" onClick={toReservation} />
   );
-  const logoutButtonElement = <Button title="Logout" onBlick={logout} />;
+  const logoutButtonElement = <Button title="Logout" onClick={logout} />;
 
   // TODO: show workspaceButtonElement only if admin
   return (

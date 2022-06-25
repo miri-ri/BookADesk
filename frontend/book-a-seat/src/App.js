@@ -12,9 +12,11 @@ import Workspace from "./components/workspace/Workspace";
 import EditForm from "./components/useraccount/EditForm";
 import CreateWorkspaceForm from "./components/workspace/CreateWorkspaceForm";
 import CreateGroupForm from "./components/workspace/CreateGroupForm";
+import jwt_decode from "jwt-decode";
 
 function App() {
   const [user, setUser] = useState("");
+  const [token, setToken] = useState("");
 
   const toLogin = () => {
     navigate("/user/login");
@@ -53,24 +55,41 @@ function App() {
   };
 
   // TODO: respace with authentication
-  const fetchUserByID = async (id) => {
-    const res = await fetch("http://localhost:8000/users/users/" + id);
-    const userData = await res.json();
-    return userData;
+  const fetchToken = async (username, password) => {
+    const res = await fetch("http://localhost:8000/api/token/", {
+      /* TODO: GET? */
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+    const token = await res.json();
+
+    if (res.status === 200) {
+      setToken(token);
+    } else {
+      console.log("error fetching jwt-token");
+    }
+    return token;
   };
 
   // TODO: error handling
-  const login = ({ email, password }) => {
-    let userID = 2;
+  const login = ({ username, password }) => {
     const getUser = async () => {
-      const userFromServer = await fetchUserByID(userID);
-      if (userFromServer) {
-        console.log("successful login:", userFromServer);
+      const token = await fetchToken(username, password);
+      if (token) {
+        console.log(token);
+        const decodedUser = jwt_decode(token.access);
+        console.log("successful login:", token, decodedUser);
         setUser({
-          firstName: userFromServer.first_name,
-          lastName: userFromServer.last_name,
-          username: userFromServer.username,
-          email: userFromServer.email,
+          username: decodedUser.username,
+          email: decodedUser.email,
+          id: decodedUser.user_id,
         });
         toOverview();
       } else {
@@ -80,44 +99,40 @@ function App() {
     getUser();
   };
 
+  // TODO: pass to component
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    toLogin();
+  };
+
   const dispatchAddUserRequest = async (user) => {
-    const res = await fetch("http://localhost:8000/users/users/", {
+    const res = await fetch("http://localhost:8000/api/register/", {
       method: "POST",
-      // headers: {
-      //   "Content-type": "application/json",
-      // },
+      headers: {
+        "Content-type": "application/json",
+      },
+      mode: "cors",
       body: JSON.stringify(user),
     });
     console.log(res);
-    const userData = await res.json();
-    console.log(userData);
-    return userData;
+    if (res.status === 200) {
+      toLogin();
+    } else {
+      console.log("an error occured during registration");
+    }
   };
 
   const register = (userData) => {
     const user = {
-      first_name: userData.firstName,
-      last_name: userData.lastName,
       username: userData.username,
       email: userData.email,
-      // password: userData.password
-      // admin: false,
+      password: userData.password,
+      password2: userData.password,
     };
     console.log(user);
     const addUser = async () => {
-      const userFromServer = await dispatchAddUserRequest(user);
-      if (userFromServer) {
-        console.log("successful login:", userFromServer);
-        setUser({
-          firstName: userFromServer.first_name,
-          lastName: userFromServer.last_name,
-          username: userFromServer.username,
-          email: userFromServer.email,
-        });
-        toOverview();
-      } else {
-        console.log("an error occured during registration");
-      }
+      await dispatchAddUserRequest(user);
     };
     addUser();
   };
@@ -150,6 +165,7 @@ function App() {
       toWorkspace={toWorkspace}
       toReservation={toReservation}
       toOverview={toOverview}
+      logout={logout}
     />
   );
   const workspaceElement = (
