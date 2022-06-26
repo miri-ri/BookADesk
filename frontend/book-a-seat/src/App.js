@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createContext, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Welcome from "./components/main/Welcome";
@@ -13,11 +13,40 @@ import EditForm from "./components/useraccount/EditForm";
 import CreateWorkspaceForm from "./components/workspace/CreateWorkspaceForm";
 import CreateGroupForm from "./components/workspace/CreateGroupForm";
 import jwt_decode from "jwt-decode";
+import useAxios from "./utils/useAxios";
+
+export const GlobalContext = createContext();
+
+export const URLs = {
+  welcomeURL: "/",
+  loginURL: "/user/login",
+  registerURL: "/user/register",
+  userDetailsURL: "/user/details",
+  overviewURL: "/overview",
+  workspaceURL: "/workspace",
+  userEditURL: "/user/details/edit",
+  createGroupURL: "/workspace/create-group",
+  createWorkspaceURL: "/workspace/create-workspace",
+  reservationURL: "/reservation",
+};
 
 function App() {
-  const [user, setUser] = useState("");
-  const [token, setToken] = useState("");
+  const [user, setUser] = useState(() =>
+    localStorage.getItem("token")
+      ? jwt_decode(localStorage.getItem("token"))
+      : null
+  );
+  const [token, setToken] = useState(() =>
+    JSON.parse(localStorage.getItem("token"))
+  );
 
+  const userGuard = (userPresent) => !userPresent && navigate(URLs.loginURL);
+
+  const guards = {
+    userGuard,
+  };
+
+  // TODO: remove toXY functions, replace with navigate(xy)
   const toLogin = () => {
     navigate("/user/login");
   };
@@ -54,6 +83,8 @@ function App() {
     navigate("/reservation");
   };
 
+  const api = useAxios();
+
   const login = ({ username, password }) => {
     const url = "http://localhost:8000/api/token/";
     const request = {
@@ -87,6 +118,7 @@ function App() {
           id: decodedTokenData.user_id,
         };
         setUser(user);
+        localStorage.setItem("token", JSON.stringify(token));
         toOverview();
       }
     };
@@ -97,6 +129,7 @@ function App() {
     setUser(null);
     setToken(null);
     toLogin();
+    localStorage.removeItem("token");
   };
 
   const register = (userData) => {
@@ -185,29 +218,41 @@ function App() {
 
   const navigate = useNavigate();
 
+  const contextData = {
+    // TODO: make backend-requests globally available
+    user,
+    setUser,
+    token,
+    setToken,
+    guards,
+    navigate,
+  };
+
   return (
-    <div className="main-container">
-      <Header />
-      <Routes>
-        <Route path="/" element={welcomeElement} />
-        <Route path="/user/login" element={loginElement} />
-        <Route path="/user/register" element={registerElement} />
-        <Route path="/user/details" element={accountDetailsElement} />
-        <Route path="/user/details/edit" element={accountEditElement} />
-        <Route path="/overview" element={overviewElement} />
-        <Route path="/reservation" element={reservationElement} />
-        <Route path="/workspace" element={workspaceElement} />
-        <Route
-          path="/workspace/create-workspace"
-          element={createWorkspaceElement}
-        />
-        <Route
-          path="/workspace/create-group"
-          element={createGroupElement}
-          toWorkspace={toWorkspace}
-        />
-      </Routes>
-    </div>
+    <GlobalContext.Provider value={contextData}>
+      <div className="main-container">
+        <Header />
+        <Routes>
+          <Route path={URLs.welcomeURL} element={welcomeElement} />
+          <Route path={URLs.loginURL} element={loginElement} />
+          <Route path={URLs.registerURL} element={registerElement} />
+          <Route path={URLs.userDetailsURL} element={accountDetailsElement} />
+          <Route path={URLs.userEditURL} element={accountEditElement} />
+          <Route path={URLs.overviewURL} element={overviewElement} />
+          <Route path={URLs.reservationURL} element={reservationElement} />
+          <Route path={URLs.workspaceURL} element={workspaceElement} />
+          <Route
+            path={URLs.createWorkspaceURL}
+            element={createWorkspaceElement}
+          />
+          <Route
+            path={URLs.createGroupURL}
+            element={createGroupElement}
+            toWorkspace={toWorkspace}
+          />
+        </Routes>
+      </div>
+    </GlobalContext.Provider>
   );
 }
 
