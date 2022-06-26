@@ -12,7 +12,7 @@ function EditForm({ user, sendUpdateRequest, toDetails }) {
   return (
     <>
       <div className="form">
-      <div className="headline">Edit</div>
+      <div className="headline">Edit Account</div>
       <form>
         <div className="field">
           <label>Email address</label>

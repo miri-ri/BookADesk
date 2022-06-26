@@ -12,9 +12,10 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace}) {
   // TODO: groups as dropdown selection
   return (
     <>
-      <h2>Create workspace form!</h2>
+    <div className="form">
+      <div className="headline">Create Workplace</div>
       <form>
-        <div>
+        <div className="field">
           <label>Name</label>
           <input
             type="text"
@@ -22,7 +23,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace}) {
             onChange={(e) => setName(e.target.value)}
           ></input>
         </div>
-        <div>
+        <div className="field">
           <label>Group</label>
           <input
             type="text"
@@ -30,7 +31,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace}) {
             onChange={(e) => setGroup(e.target.value)}
           ></input>
         </div>
-        <div>
+        <div className="field">
           <label>Comment</label>
           <input
             type="text"
@@ -52,6 +53,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace}) {
           })
         }
       />
+    </div>
     </>
   );
 }

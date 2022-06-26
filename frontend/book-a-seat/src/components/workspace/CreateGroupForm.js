@@ -7,9 +7,10 @@ function CreateGroupForm({ sendCreateRequest, toWorkspace }) {
 
   return (
     <>
-      <h2>Create group form!</h2>
+    <div className="form">
+      <div className="headline">Create Group</div>
       <form>
-        <div>
+        <div className="field">
           <label>Name</label>
           <input
             type="text"
@@ -27,6 +28,7 @@ function CreateGroupForm({ sendCreateRequest, toWorkspace }) {
           })
         }
       />
+    </div>
     </>
   );
 }

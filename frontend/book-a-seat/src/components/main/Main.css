@@ -78,3 +78,7 @@ svg {
     margin-top: -4px;
     margin-bottom: 5px;
 }
+
+.body-text-center {
+    text-align: center;
+}

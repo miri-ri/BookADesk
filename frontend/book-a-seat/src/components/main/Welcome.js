@@ -17,14 +17,15 @@ function Welcome({ toLogin }) {
       </div>
       <br></br>
     
-      <h3 className="text-body">Welcome to Book A Desk!</h3>
+      <div className="headline">Welcome to Book A Desk!</div>
       <br></br>
-      <div className="text-body"> Please log into your account to book a workspace.</div>
-      <br></br>
-      <div className="login-button">
-        {loginButtonElement}
-
+      <div className="body-text-center">Please log into your account to book a workspace.
+        <br></br>
+        <div className="login-button" style={{ margin:"20px" }}>
+          {loginButtonElement}
+        </div>
       </div>
+
     </>
   );
 }
