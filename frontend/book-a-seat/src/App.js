@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Welcome from "./components/main/Welcome";
@@ -13,47 +13,10 @@ import Workspace from "./components/workspace/Workspace";
 import EditForm from "./components/useraccount/EditForm";
 import CreateWorkspaceForm from "./components/workspace/CreateWorkspaceForm";
 import CreateGroupForm from "./components/workspace/CreateGroupForm";
-import jwt_decode from "jwt-decode";
-import useAxios from "./utils/useAxios";
-
-export const GlobalContext = createContext();
-
-export const URLs = {
-  welcomeURL: "/",
-  loginURL: "/user/login",
-  registerURL: "/user/register",
-  userDetailsURL: "/user/details",
-  overviewURL: "/overview",
-  workspaceURL: "/workspace",
-  userEditURL: "/user/details/edit",
-  createGroupURL: "/workspace/create-group",
-  createWorkspaceURL: "/workspace/create-workspace",
-  reservationURL: "/reservation",
-};
 
 function App() {
-  const [user, setUser] = useState(() =>
-    localStorage.getItem("token")
-      ? jwt_decode(localStorage.getItem("token"))
-      : null
-  );
-  const [token, setToken] = useState(() =>
-    JSON.parse(localStorage.getItem("token"))
-  );
+  const [user, setUser] = useState("");
 
-  const userGuard = (userPresent) => !userPresent && navigate(URLs.loginURL);
-
-  const guards = {
-    userGuard,
-  };
-
-  const requests = {
-    login,
-    register,
-    updateUser,
-  };
-
-  // TODO: remove toXY functions, replace with navigate(xy)
   const toLogin = () => {
     navigate("/user/login");
   };
@@ -90,76 +53,71 @@ function App() {
     navigate("/reservation");
   };
 
-  const login = ({ username, password }) => {
-    const url = "http://localhost:8000/api/token/";
-    const request = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    };
+  // TODO: respace with authentication
+  const fetchUserByID = async (id) => {
+    const res = await fetch("http://localhost:8000/users/users/" + id);
+    const userData = await res.json();
+    return userData;
+  };
+
+  // TODO: error handling
+  const login = ({ email, password }) => {
+    let userID = 2;
     const getUser = async () => {
-      const fetchToken = async () => {
-        const response = await fetch(url, request).catch((error) =>
-          console.error("There was an error!", error)
-        );
-        if (response.status === 200) {
-          return await response.json();
-        } else {
-          return null;
-        }
-      };
-      const token = await fetchToken();
-      if (token) {
-        const decodedTokenData = jwt_decode(token.access);
-        const user = {
-          username: decodedTokenData.username,
-          email: decodedTokenData.email,
-          id: decodedTokenData.user_id,
-        };
-        setUser(user);
-        localStorage.setItem("token", JSON.stringify(token));
+      const userFromServer = await fetchUserByID(userID);
+      if (userFromServer) {
+        console.log("successful login:", userFromServer);
+        setUser({
+          firstName: userFromServer.first_name,
+          lastName: userFromServer.last_name,
+          username: userFromServer.username,
+          email: userFromServer.email,
+        });
         toOverview();
+      } else {
+        console.log("an error occured loggin in");
       }
     };
     getUser();
   };
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    toLogin();
-    localStorage.removeItem("token");
+  const dispatchAddUserRequest = async (user) => {
+    const res = await fetch("http://localhost:8000/users/users/", {
+      method: "POST",
+      // headers: {
+      //   "Content-type": "application/json",
+      // },
+      body: JSON.stringify(user),
+    });
+    console.log(res);
+    const userData = await res.json();
+    console.log(userData);
+    return userData;
   };
 
   const register = (userData) => {
     const user = {
+      first_name: userData.firstName,
+      last_name: userData.lastName,
       username: userData.username,
       email: userData.email,
-      password: userData.password,
-      password2: userData.password,
+      // password: userData.password
+      // admin: false,
     };
-    const url = "http://localhost:8000/api/register/";
-    const request = {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      mode: "cors",
-      body: JSON.stringify(user),
-    };
+    console.log(user);
     const addUser = async () => {
-      const response = await fetch(url, request).catch((error) =>
-        console.error("There was an error!", error)
-      );
-      // TODO: add might be a different status code
-      if (response.status === 200) {
-        toLogin();
+      const userFromServer = await dispatchAddUserRequest(user);
+      if (userFromServer) {
+        console.log("successful login:", userFromServer);
+        setUser({
+          firstName: userFromServer.first_name,
+          lastName: userFromServer.last_name,
+          username: userFromServer.username,
+          email: userFromServer.email,
+        });
+        toOverview();
+      } else {
+        console.log("an error occured during registration");
       }
     };
     addUser();
@@ -167,7 +125,6 @@ function App() {
 
   const updateUser = (userData) => {
     console.log("update", userData);
-    
   };
 
   const addWorkspace = (data) => {
@@ -194,7 +151,6 @@ function App() {
       toWorkspace={toWorkspace}
       toReservation={toReservation}
       toOverview={toOverview}
-      logout={logout}
     />
   );
   const workspaceElement = (
@@ -224,41 +180,29 @@ function App() {
 
   const navigate = useNavigate();
 
-  const contextData = {
-    // TODO: make backend-requests globally available
-    user,
-    setUser,
-    token,
-    setToken,
-    guards,
-    navigate,
-  };
-
   return (
-    <GlobalContext.Provider value={contextData}>
-      <div className="main-container">
-        <Header />
-        <Routes>
-          <Route path={URLs.welcomeURL} element={welcomeElement} />
-          <Route path={URLs.loginURL} element={loginElement} />
-          <Route path={URLs.registerURL} element={registerElement} />
-          <Route path={URLs.userDetailsURL} element={accountDetailsElement} />
-          <Route path={URLs.userEditURL} element={accountEditElement} />
-          <Route path={URLs.overviewURL} element={overviewElement} />
-          <Route path={URLs.reservationURL} element={reservationElement} />
-          <Route path={URLs.workspaceURL} element={workspaceElement} />
-          <Route
-            path={URLs.createWorkspaceURL}
-            element={createWorkspaceElement}
-          />
-          <Route
-            path={URLs.createGroupURL}
-            element={createGroupElement}
-            toWorkspace={toWorkspace}
-          />
-        </Routes>
-      </div>
-    </GlobalContext.Provider>
+    <div className="main-container">
+      <Header />
+      <Routes>
+        <Route path="/" element={welcomeElement} />
+        <Route path="/user/login" element={loginElement} />
+        <Route path="/user/register" element={registerElement} />
+        <Route path="/user/details" element={accountDetailsElement} />
+        <Route path="/user/details/edit" element={accountEditElement} />
+        <Route path="/overview" element={overviewElement} />
+        <Route path="/reservation" element={reservationElement} />
+        <Route path="/workspace" element={workspaceElement} />
+        <Route
+          path="/workspace/create-workspace"
+          element={createWorkspaceElement}
+        />
+        <Route
+          path="/workspace/create-group"
+          element={createGroupElement}
+          toWorkspace={toWorkspace}
+        />
+      </Routes>
+    </div>
   );
 }
 

@@ -3,17 +3,15 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
-from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer,UserSerializer
+from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 
+# Create your views here.
 
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -32,7 +30,7 @@ def getRoutes(request):
         '/api/register/',
         '/api/token/refresh/',
         '/api/meinereservierungen/',
-        '/api/user/',
+
     ]
     return Response(routes)
 
