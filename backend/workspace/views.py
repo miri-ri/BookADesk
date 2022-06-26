@@ -1,5 +1,5 @@
 from os import stat
-from django.http import JsonResponse 
+from django.http import JsonResponse
 from .models import Workspace
 from .serializers import WorkspaceSerializer
 from rest_framework.decorators import api_view
@@ -13,6 +13,7 @@ def workspace_list(request):
     serializer = WorkspaceSerializer(workspace, many=True)
     return Response(serializer.data)
 
+
 @api_view(['POST'])
 def workspace_add(request):
     serializer = WorkspaceSerializer(data=request.data)
@@ -22,9 +23,9 @@ def workspace_add(request):
 
 
 @api_view(['GET', 'PUT'])
-def workspace_edit(request, id):
+def workspace_edit(request, edit_id):
 
-    workspace = Workspace.objects.get(pkey=id)
+    workspace = Workspace.objects.get(id=edit_id)
 
     if request.method == "GET":
         serializer = WorkspaceSerializer(workspace)
@@ -36,14 +37,11 @@ def workspace_edit(request, id):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-       
+
+
 @api_view(['DELETE'])
-def workspace_delete(request, id):
-  
-  workspace = Workspace.objects.get(pkey=id)
-  workspace.delete()
-  return Response(status=status.HTTP_204_NO_CONTENT)
+def workspace_delete(request, delete_id):
 
-
-
-
+    workspace = Workspace.objects.get(id=delete_id)
+    workspace.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
