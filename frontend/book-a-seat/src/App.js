@@ -202,6 +202,8 @@ function App() {
           toWorkspace={toWorkspace}
         />
       </Routes>
+
+      <Footer />
     </div>
   );
 }

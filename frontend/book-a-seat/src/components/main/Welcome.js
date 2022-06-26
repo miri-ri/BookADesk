@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../ui-common/Button";
+import "./Main.css"
 
 function Welcome({ toLogin }) {
   const loginButtonElement = <Button title="Login" onClick={toLogin} />;

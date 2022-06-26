@@ -1,0 +1,12 @@
+.home {
+    background-image: url("background.jpg");
+    height: auto;
+    background-size: 100%;
+}
+
+.text {
+    color: #fff;
+    font-size: 50px;
+    text-align: center;
+    padding: 60px 0px;
+}
