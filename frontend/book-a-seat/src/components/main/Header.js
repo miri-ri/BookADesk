@@ -28,7 +28,7 @@ function Header() {
     <>
       <div className="header">
         <div className="header-left">
-          <h2><a href="/" style={{ color: "inherit", textDecoration:"none" }}>Book a Desk</a></h2>
+          <h2><a href="/" style={{ color: "inherit", textDecoration:"none"}} onClick={() => navigate("")}>Book a Desk</a></h2>
         </div>
         {<div class="header-right">
             <div class="btn-group" role="group">

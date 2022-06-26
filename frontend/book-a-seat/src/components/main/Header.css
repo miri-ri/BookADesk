@@ -1,27 +1,29 @@
         body {
-            padding: 140px 0px;
+            padding: 86px 0px;
             margin-left:auto;
             margin-right:auto;
         }
+
         .header {
             left: 0;
             top: 0;
             position: fixed;
-            background-color: white;
             border-bottom-style: solid;
             border-color: #D6D6D6;
             border-width: 1px;
             padding: 7px 20px;
             width: 100%;
         }
+
         .header-left {
             padding: 9px 0;
             vertical-align: top;
             display: inline-block;
             text-align: left;
         }
+
         .header-right{
-            padding: 15px;
+            padding: 21px;
             margin: auto;
             float:right;
         }
@@ -46,4 +48,17 @@
             float: left;
             display:inline-block;
             padding: 15px 5px;
+        }
+
+        .home {
+            background-image: url("background.jpg");
+            height: auto;
+            background-size: 100%;
+        }
+
+        .text {
+            color: #fff;
+            font-size: 50px;
+            text-align: center;
+            padding: 60px 0px;
         }

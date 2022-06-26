@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Welcome from "./components/main/Welcome";
 import Header from "./components/main/Header";
+import Footer from "./components/main/Footer";
 import AccountDetails from "./components/useraccount/AccountDetails";
 import RegisterForm from "./components/useraccount/RegisterForm";
 import LoginForm from "./components/useraccount/LoginForm";
@@ -201,6 +202,7 @@ function App() {
           toWorkspace={toWorkspace}
         />
       </Routes>
+      <Footer />
     </div>
   );
 }

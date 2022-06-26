@@ -6,9 +6,19 @@ function Welcome({ toLogin }) {
 
   return (
     <>
-      <p>representative image</p>
-      <p>On this website you can book your workspace.</p>
-      {loginButtonElement}
+      <div className="home">
+        <div className="text">
+          <br></br>
+          Book A Desk
+          <br></br>
+          <br></br>
+        </div>
+      </div>
+      <div className="text-body">On this website you can book your workspace.</div>
+      <div className="login-button">
+        {loginButtonElement}
+
+      </div>
     </>
   );
 }
