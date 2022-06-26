@@ -1,7 +1,12 @@
 import React from "react";
 
-function Button({ title, onClick }) {
-  return <button className="m-1" onClick={onClick}>{title}</button>;
+function Button({ title, onClick, style = "classic" }) {
+  const styleClasses = "m-1 btn btn-" + style;
+  return (
+    <button className={styleClasses} onClick={onClick}>
+      {title}
+    </button>
+  );
 }
 
 export default Button;
