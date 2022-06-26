@@ -13,7 +13,6 @@ import EditForm from "./components/useraccount/EditForm";
 import CreateWorkspaceForm from "./components/workspace/CreateWorkspaceForm";
 import CreateGroupForm from "./components/workspace/CreateGroupForm";
 import jwt_decode from "jwt-decode";
-import useAxios from "./utils/useAxios";
 
 export const GlobalContext = createContext();
 
@@ -82,8 +81,6 @@ function App() {
   const toReservation = () => {
     navigate("/reservation");
   };
-
-  const api = useAxios();
 
   const login = ({ username, password }) => {
     const url = "http://localhost:8000/api/token/";
