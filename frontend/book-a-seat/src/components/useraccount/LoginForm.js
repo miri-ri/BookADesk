@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Button from "../ui-common/Button";
+import "../main/Main.css"
 
 function LoginForm({ toRegister, sendLoginRequest }) {
   const [email, setEmail] = useState("");
@@ -7,30 +8,33 @@ function LoginForm({ toRegister, sendLoginRequest }) {
 
   return (
     <>
-      <h2>login form!</h2>
-      <form>
-        <div>
-          <label id="emailInput">Email address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></input>
-        </div>
-        <div>
-          <label id="passwordInput">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></input>
-        </div>
-      </form>
-      <Button
-        title="Login"
-        onClick={() => sendLoginRequest({ email, password })}
-      />
-      <Button title="Register" onClick={toRegister} />
+      <div className="form">
+        <div className="headline">Login</div>
+        <form>
+          <div className="field">
+            <label id="emailInput">Email address</label><br></br>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></input>
+          </div>
+          <div className="field">
+            <label id="passwordInput">Password</label><br></br>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            ></input>
+          </div>
+        </form>
+        <br></br>
+        <Button
+          title="Login"
+          onClick={() => sendLoginRequest({ email, password })}
+        />
+        <Button title="Register" onClick={toRegister} />
+      </div>
     </>
   );
 }
