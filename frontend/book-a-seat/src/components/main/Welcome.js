@@ -10,12 +10,17 @@ function Welcome({ toLogin }) {
       <div className="home">
         <div className="text">
           <br></br>
-          Book A Desk
+          
           <br></br>
           <br></br>
         </div>
       </div>
-      <div className="text-body">On this website you can book your workspace.</div>
+      <br></br>
+    
+      <h3 className="text-body">Welcome to Book A Desk!</h3>
+      <br></br>
+      <div className="text-body"> Please log into your account to book a workspace.</div>
+      <br></br>
       <div className="login-button">
         {loginButtonElement}
 
