@@ -54,10 +54,9 @@ function App() {
     navigate("/reservation");
   };
 
-  // TODO: respace with authentication
-  const fetchToken = async (username, password) => {
-    const res = await fetch("http://localhost:8000/api/token/", {
-      /* TODO: GET? */
+  const login = ({ username, password }) => {
+    const url = "http://localhost:8000/api/token/";
+    const request = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,60 +66,37 @@ function App() {
         username,
         password,
       }),
-    });
-    const token = await res.json();
-
-    if (res.status === 200) {
-      setToken(token);
-    } else {
-      console.log("error fetching jwt-token");
-    }
-    return token;
-  };
-
-  // TODO: error handling
-  const login = ({ username, password }) => {
+    };
     const getUser = async () => {
-      const token = await fetchToken(username, password);
+      const fetchToken = async () => {
+        const response = await fetch(url, request).catch((error) =>
+          console.error("There was an error!", error)
+        );
+        if (response.status === 200) {
+          return await response.json();
+        } else {
+          return null;
+        }
+      };
+      const token = await fetchToken();
       if (token) {
-        console.log(token);
-        const decodedUser = jwt_decode(token.access);
-        console.log("successful login:", token, decodedUser);
-        setUser({
-          username: decodedUser.username,
-          email: decodedUser.email,
-          id: decodedUser.user_id,
-        });
+        const decodedTokenData = jwt_decode(token.access);
+        const user = {
+          username: decodedTokenData.username,
+          email: decodedTokenData.email,
+          id: decodedTokenData.user_id,
+        };
+        setUser(user);
         toOverview();
-      } else {
-        console.log("an error occured loggin in");
       }
     };
     getUser();
   };
 
-  // TODO: pass to component
   const logout = () => {
     setUser(null);
     setToken(null);
     toLogin();
-  };
-
-  const dispatchAddUserRequest = async (user) => {
-    const res = await fetch("http://localhost:8000/api/register/", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      mode: "cors",
-      body: JSON.stringify(user),
-    });
-    console.log(res);
-    if (res.status === 200) {
-      toLogin();
-    } else {
-      console.log("an error occured during registration");
-    }
   };
 
   const register = (userData) => {
@@ -130,9 +106,23 @@ function App() {
       password: userData.password,
       password2: userData.password,
     };
-    console.log(user);
+    const url = "http://localhost:8000/api/register/";
+    const request = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify(user),
+    };
     const addUser = async () => {
-      await dispatchAddUserRequest(user);
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      // TODO: add might be a different status code
+      if (response.status === 200) {
+        toLogin();
+      }
     };
     addUser();
   };
