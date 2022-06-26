@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext, URLs } from "../../App";
 import Button from "../ui-common/Button";
 
-function Welcome({ toLogin }) {
-  const loginButtonElement = <Button title="Login" onClick={toLogin} />;
+function Welcome() {
+  const { navigate } = useContext(GlobalContext);
+  const loginButtonElement = (
+    <Button title="Login" onClick={() => navigate(URLs.loginURL)} />
+  );
 
   return (
     <>
