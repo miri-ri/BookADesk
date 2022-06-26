@@ -1,38 +1,49 @@
-from django.shortcuts import render, redirect
-
+from os import stat
+from django.http import JsonResponse 
 from .models import Workspace
-from .forms import WorkplaceForm
+from .serializers import WorkplaceSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 
+
+@api_view('GET')
 def workplace_list(request):
-    context = {'workplace_list':Workspace.objects.all()}
-    return render(request, "workplace_list.html", context)
+    workplaces = Workspace.objects.all()
+    serializer = WorkplaceSerializer(workplaces, many=True)
+    return Response(serializer.data)
 
-def workplace_delete(request, id):
-    Workspace.objects.filter(pk=id).delete()
-    context = {'workplace_list': Workspace.objects.all()}
-    return render(request, "workplace_list.html", context)
-
-def workplace_edit(request, id=0):
-    if request.method == "GET":
-        workplace = Workspace.objects.get(pk=id)
-        form = WorkplaceForm(instance=workplace)
-        print(workplace)
-        print(form)
-        return render(request, "workplace_edit.html",{'form': form})
-    else:
-        workplace = Workspace.objects.get(pk=id)
-        form = WorkplaceForm(request.POST,instance=workplace)
-        if form.is_valid():
-            form.save()
-        return redirect('/workplace/')
-
+@api_view('POST')
 def workplace_add(request):
+    serializer = WorkplaceSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET', 'PUT'])
+def workplace_edit(request, id):
+
+    workplace = Workspace.objects.get(pkey=id)
+
     if request.method == "GET":
-        form = WorkplaceForm()
-        return render(request, "workplace_add.html",{'form': form})
-    else: 
-        form = WorkplaceForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return redirect('/workplace/')
+        serializer = WorkplaceSerializer(workplace)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = WorkplaceSerializer(workplace, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+       
+@api_view('DELETE')
+def workplace_delete(request, id):
+  
+  workplace = Workspace.objects.get(pkey=id)
+  workplace.delete()
+  return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
 
