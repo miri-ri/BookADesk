@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import Button from "../ui-common/Button";
 
 function LoginForm({ toRegister, sendLoginRequest }) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (
     <>
-      <h2>Login:</h2>
+      <h2>login form!</h2>
       <form>
         <div>
-          <label id="usernameInput">Username</label>
+          <label id="emailInput">Email address</label>
           <input
-            type="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           ></input>
         </div>
         <div>
@@ -28,7 +28,7 @@ function LoginForm({ toRegister, sendLoginRequest }) {
       </form>
       <Button
         title="Login"
-        onClick={() => sendLoginRequest({ username, password })}
+        onClick={() => sendLoginRequest({ email, password })}
       />
       <Button title="Register" onClick={toRegister} />
     </>

@@ -1,29 +1,23 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import Button from "../ui-common/Button";
-import { GlobalContext, URLs } from "../../App";
 
-function Overview({ toWorkspace, toReservation, logout }) {
-  const { user, guards, navigate } = useContext(GlobalContext);
+function Overview({ toUserDetails, toWorkspace, toReservation }) {
+  const logout = () => {
+    console.log("logout");
+  };
 
   const detailsButtonElement = (
-    <Button
-      title="User Details"
-      onClick={() => navigate(URLs.userDetailsURL)}
-    />
+    <Button title="Show User Details" onClick={toUserDetails} />
   );
   const workspaceButtonElement = (
-    <Button title="Workspaces" onClick={toWorkspace} />
+    <Button title="Show Workspace" onClick={toWorkspace} />
   );
   const reservationButtonElement = (
-    <Button title="Reservations" onClick={toReservation} />
+    <Button title="Show Reservations" onClick={toReservation} />
   );
-  const logoutButtonElement = <Button title="Logout" onClick={logout} />;
+  const logoutButtonElement = <Button title="Logout" onBlick={logout} />;
 
-  useEffect(() => {
-    guards.userGuard(!!user);
-    // TODO: isAdminGuard
-  });
-
+  // TODO: show workspaceButtonElement only if admin
   return (
     <>
       <h4>Overview:</h4>
