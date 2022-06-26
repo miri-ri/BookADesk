@@ -11,9 +11,10 @@ function EditForm({ user, sendUpdateRequest, toDetails }) {
 
   return (
     <>
-      <h2>Edit form!</h2>
+      <div className="form">
+      <div className="headline">Edit</div>
       <form>
-        <div>
+        <div className="field">
           <label>Email address</label>
           <input
             type="email"
@@ -21,7 +22,7 @@ function EditForm({ user, sendUpdateRequest, toDetails }) {
             onChange={(e) => setEmail(e.target.value)}
           ></input>
         </div>
-        <div>
+        <div className="field">
           <label>Password</label>
           <input
             type="password"
@@ -29,7 +30,7 @@ function EditForm({ user, sendUpdateRequest, toDetails }) {
             onChange={(e) => setPassword(e.target.value)}
           ></input>
         </div>
-        <div>
+        <div className="field">
           <label>Username</label>
           <input
             type="text"
@@ -37,7 +38,7 @@ function EditForm({ user, sendUpdateRequest, toDetails }) {
             onChange={(e) => setUsername(e.target.value)}
           ></input>
         </div>
-        <div>
+        <div className="field">
           <label>First Name</label>
           <input
             type="text"
@@ -45,7 +46,7 @@ function EditForm({ user, sendUpdateRequest, toDetails }) {
             onChange={(e) => setFirstName(e.target.value)}
           ></input>
         </div>
-        <div>
+        <div className="field">
           <label>Last Name</label>
           <input
             type="text"
@@ -54,6 +55,7 @@ function EditForm({ user, sendUpdateRequest, toDetails }) {
           ></input>
         </div>
       </form>
+      <br></br>
       <Button title="Back" onClick={toDetails} />
       <Button
         title="Apply Changes"
@@ -67,6 +69,7 @@ function EditForm({ user, sendUpdateRequest, toDetails }) {
           })
         }
       />
+      </div>
     </>
   );
 }

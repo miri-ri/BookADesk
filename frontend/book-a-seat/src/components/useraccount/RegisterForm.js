@@ -10,62 +10,65 @@ function RegisterForm({ toLogin, sendRegisterRequest }) {
 
   return (
     <>
-      <h2>Register form!</h2>
-      <form>
-        <div>
-          <label>Email address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></input>
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></input>
-        </div>
-        <div>
-          <label>Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          ></input>
-        </div>
-        <div>
-          <label>First Name</label>
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          ></input>
-        </div>
-        <div>
-          <label>Last Name</label>
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          ></input>
-        </div>
-      </form>
-      <Button title="Back" onClick={toLogin} />
-      <Button
-        title="Register"
-        onClick={() =>
-          sendRegisterRequest({
-            email,
-            password,
-            username,
-            firstName,
-            lastName,
-          })
-        }
-      />
+      <div className="form">
+        <div className="headline">Register</div>
+        <form>
+          <div className="field">
+            <label>Email address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></input>
+          </div>
+          <div className="field">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            ></input>
+          </div>
+          <div className="field">
+            <label>Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            ></input>
+          </div>
+          <div className="field">
+            <label>First Name</label>
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            ></input>
+          </div>
+          <div className="field">
+            <label>Last Name</label>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            ></input>
+          </div>
+        </form>
+        <br></br>
+        <Button title="Back" onClick={toLogin} />
+        <Button
+          title="Register"
+          onClick={() =>
+            sendRegisterRequest({
+              email,
+              password,
+              username,
+              firstName,
+              lastName,
+            })
+          }
+        />
+      </div>
     </>
   );
 }

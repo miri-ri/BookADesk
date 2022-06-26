@@ -131,9 +131,11 @@ function Reservation() {
 
   return (
     <>
-      <h2>Reservation:</h2>
+      <div className="body">
+        <h2>Reservation:</h2>
         {table}
         {myReservations}
+      </div>
     </>
   );
 }
