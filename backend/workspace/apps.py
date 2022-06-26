@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class WorkplaceConfig(AppConfig):
+class WorkspaceConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'workplace'
+    name = 'workspace'
