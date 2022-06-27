@@ -30,14 +30,14 @@ let reservations = [
     id: 2,
     user_id: 2,
     seat_id: 2,
-    start: "2022-06-29T08:00:00+02:00",
+    start: "2022-07-01T08:00:00+02:00",
     duration: 3,
   },
   {
     id: 3,
     user_id: 2,
     seat_id: 1,
-    start: "2022-06-29T14:00:00+02:00",
+    start: "2022-06-30T14:00:00+02:00",
     duration: 2,
   },
   {
