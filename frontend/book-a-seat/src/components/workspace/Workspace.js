@@ -109,13 +109,17 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview }) {
 
   return (
     <>
-      <h4>Workspaces</h4>
-      {workspaceTableElement}
-      <h4>Groups</h4>
-      {groupTableElement}
-      {addWorkspaceButtonElement}
-      {addGroupButtonElement}
-      {backButtonElement}
+      <div className="body">
+        <h4>Workspaces</h4>
+        {workspaceTableElement}
+        <br></br>
+        <h4>Groups</h4>
+        {groupTableElement}
+        <br></br>
+        {addWorkspaceButtonElement}
+        {addGroupButtonElement}
+        {backButtonElement}
+      </div>
     </>
   );
 }

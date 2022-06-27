@@ -7,26 +7,28 @@ function CreateGroupForm({ sendCreateRequest, toWorkspace }) {
 
   return (
     <>
-      <h2>Create group form!</h2>
-      <form>
-        <div>
-          <label>Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          ></input>
-        </div>
-      </form>
-      <Button title="Back" onClick={toWorkspace} />
-      <Button
-        title="Create Workspace"
-        onClick={() =>
-          sendCreateRequest({
-            name,
-          })
-        }
-      />
+      <div className="form">
+        <div className="headline">Create Group</div>{" "}
+        <form>
+          <div className="field">
+            <label>Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            ></input>
+          </div>
+        </form>
+        <Button title="Back" onClick={toWorkspace} />
+        <Button
+          title="Create Workspace"
+          onClick={() =>
+            sendCreateRequest({
+              name,
+            })
+          }
+        />
+      </div>
     </>
   );
 }

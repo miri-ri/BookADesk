@@ -3,22 +3,13 @@ import { useNavigate } from "react-router-dom";
 import "./Header.css";
 
 function Header() {
-  const accountButton = (
+  const overviewButton = (
     <button
       type="button"
       class="menu-button"
-      onClick={() => navigate("/useraccount")}
+      onClick={() => navigate("/overview")}
     >
-      Account
-    </button>
-  );
-  const ReservationsButton = (
-    <button
-      type="button"
-      class="menu-button"
-      onClick={() => navigate("/reservation")}
-    >
-      Reservations
+      Overview
     </button>
   );
 
@@ -28,14 +19,23 @@ function Header() {
     <>
       <div className="header">
         <div className="header-left">
-          <h2><a href="/" style={{ color: "inherit", textDecoration:"none" }}>Book a Desk</a></h2>
+          <h2>
+            <a
+              href="/"
+              style={{ color: "inherit", textDecoration: "none" }}
+              onClick={() => navigate("/")}
+            >
+              Book A Desk
+            </a>
+          </h2>
         </div>
-        {<div class="header-right">
+        {
+          <div class="header-right">
             <div class="btn-group" role="group">
-                {accountButton}
-                {ReservationsButton}
+              {overviewButton}
             </div>
-          </div>}
+          </div>
+        }
       </div>
     </>
   );

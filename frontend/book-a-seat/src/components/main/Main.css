@@ -1,0 +1,85 @@
+.home {
+  background-image: url("../../styling/images/background.jpg");
+  height: auto;
+  background-size: 100%;
+}
+
+.text {
+  color: #fff;
+  font-size: 50px;
+  text-align: center;
+  padding: 60px 0px;
+}
+
+.sep-overview,
+.sep-admin {
+  padding-bottom: 25px;
+}
+
+.grid-tile {
+  min-width: 150px;
+  display: grid;
+  padding: 15px 5px;
+  align-content: center;
+  border-radius: 7px;
+  background-color: rgb(243, 243, 243);
+}
+
+.svg-container {
+  display: flex;
+  justify-content: center;
+}
+
+.headline {
+  text-align: center;
+  margin: 20px;
+  font-size: 1.8rem;
+}
+
+.grid {
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  gap: 50px;
+  grid-auto-flow: column;
+}
+
+.container {
+  display: flex;
+}
+.body {
+  padding: 20px;
+  margin-bottom: -32px;
+}
+
+.form {
+  text-align: center;
+  border: 1px solid;
+  margin: 2% 35%;
+  padding: 50px;
+  border-radius: 12px;
+  padding-top: -30px;
+}
+
+.field {
+  text-align: left;
+  margin: 15px 0px;
+}
+
+input {
+  width: 100%;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+svg {
+  width: 110px;
+  height: 100px;
+  margin-top: -4px;
+  margin-bottom: 5px;
+}
+
+.body-text-center {
+  text-align: center;
+}

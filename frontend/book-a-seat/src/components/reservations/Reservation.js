@@ -23,28 +23,28 @@ let reservations = [
     id: 1,
     user_id: 3,
     seat_id: 1,
-    start: "2022-06-25T12:00:00+02:00",
+    start: "2022-06-28T12:00:00+02:00",
     duration: 1,
   },
   {
     id: 2,
     user_id: 2,
     seat_id: 2,
-    start: "2022-06-26T08:00:00+02:00",
+    start: "2022-06-29T08:00:00+02:00",
     duration: 3,
   },
   {
     id: 3,
     user_id: 2,
     seat_id: 1,
-    start: "2022-06-24T14:00:00+02:00",
+    start: "2022-06-29T14:00:00+02:00",
     duration: 2,
   },
   {
     id: 4,
     user_id: 1,
     seat_id: 3,
-    start: "2022-06-24T11:00:00+02:00",
+    start: "2022-06-29T11:00:00+02:00",
     duration: 4,
   },
   {
@@ -56,7 +56,7 @@ let reservations = [
   },
   {
     id: 5,
-    user_id: 2,
+    user_id: 1,
     seat_id: 3,
     start: "2022-06-28T12:00:00+02:00",
     duration: 4,
@@ -131,9 +131,11 @@ function Reservation() {
 
   return (
     <>
-      <h2>Reservation:</h2>
+      <div className="body">
+        <h2>Reservation:</h2>
         {table}
         {myReservations}
+      </div>
     </>
   );
 }
@@ -179,10 +181,8 @@ function editSlot(workplace, date, time, id) {
 function saveChanges(){
   /*var cutWorkplace = selectedSlots_ID.map(id => (id.split('_')[0] +"_"+ id.split('_')[1]))
   var findDuplicates = cutWorkplace => cutWorkplace.filter((item, index) => cutWorkplace.indexOf(item) !== index)
-
   var c = 0;
   var duplicats = [];
-
   selectedSlots_ID.map(id => findDuplicates(cutWorkplace).filter(d => d===id.split('_')[0] +"_"+ id.split('_')[1])).map(item => {
     if(item.length!=0){
       item = selectedSlots_ID[c]

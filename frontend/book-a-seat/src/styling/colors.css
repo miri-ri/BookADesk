@@ -9,5 +9,14 @@
 }
 
 .btn:focus {
-    box-shadow: none;
+  box-shadow: none;
+}
+
+.footer,
+.header {
+  background-color: rgb(233, 255, 255);
+}
+
+.band {
+  background-color: rgba(62, 154, 131, 0.599);
 }

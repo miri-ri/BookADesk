@@ -10,9 +10,25 @@ function Welcome() {
 
   return (
     <>
-      <p>representative image</p>
-      <p>On this website you can book your workspace.</p>
-      {loginButtonElement}
+      <div className="home">
+        <div className="text">
+          <br></br>
+
+          <br></br>
+          <br></br>
+        </div>
+      </div>
+      <br></br>
+
+      <div className="headline">Welcome to Book A Desk!</div>
+      <br></br>
+      <div className="body-text-center">
+        Please log into your account to book a workspace.
+        <br></br>
+        <div className="login-button" style={{ margin: "20px" }}>
+          {loginButtonElement}
+        </div>
+      </div>
     </>
   );
 }
