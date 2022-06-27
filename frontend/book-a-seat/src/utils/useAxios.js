@@ -15,6 +15,7 @@ const useAxios = () => {
   });
 
   axiosInstance.interceptors.request.use(async (req) => {
+    console.log("intercept:", req);
     const user = jwt_decode(token.access);
     const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
 
@@ -30,6 +31,8 @@ const useAxios = () => {
     setUser(jwt_decode(response.data.access));
 
     req.headers.Authorization = `Bearer ${response.data.access}`;
+
+    console.log("finished request:", req);
     return req;
   });
 

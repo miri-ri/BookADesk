@@ -5,8 +5,6 @@ function RegisterForm({ toLogin, sendRegisterRequest }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
 
   return (
     <>
@@ -37,22 +35,6 @@ function RegisterForm({ toLogin, sendRegisterRequest }) {
               onChange={(e) => setUsername(e.target.value)}
             ></input>
           </div>
-          <div className="field">
-            <label>First Name</label>
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            ></input>
-          </div>
-          <div className="field">
-            <label>Last Name</label>
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            ></input>
-          </div>
         </form>
         <br></br>
         <Button title="Back" onClick={toLogin} />
@@ -63,8 +45,6 @@ function RegisterForm({ toLogin, sendRegisterRequest }) {
               email,
               password,
               username,
-              firstName,
-              lastName,
             })
           }
         />

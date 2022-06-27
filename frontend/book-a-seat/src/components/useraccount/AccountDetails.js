@@ -1,9 +1,14 @@
 import React from "react";
 import Button from "../ui-common/Button";
+import useAxios from "../../utils/useAxios";
+import { GlobalContext } from "../../App";
+import { useContext } from "react";
 
-function AccountDetails({ user, toEdit, toOverview }) {
+function AccountDetails({ toEdit, toOverview }) {
   const backButtonElement = <Button title="Back" onClick={toOverview} />;
   const editButtonElement = <Button title="Edit" onClick={toEdit} />;
+
+  const { user } = useContext(GlobalContext);
 
   return (
     <>
@@ -23,40 +28,13 @@ function AccountDetails({ user, toEdit, toOverview }) {
             <tr>
               {" "}
               <td style={{ paddingBottom: "1em", textAlign: "left" }}>
-                Password:
-              </td>
-              <td style={{ paddingBottom: "1em", textAlign: "left" }}>
-                {user.password}
-              </td>
-            </tr>
-            <tr>
-              {" "}
-              <td style={{ paddingBottom: "1em", textAlign: "left" }}>
                 Username:
               </td>
               <td style={{ paddingBottom: "1em", textAlign: "left" }}>
                 {user.username}
               </td>
             </tr>
-            <tr>
-              {" "}
-              <td style={{ paddingBottom: "1em", textAlign: "left" }}>
-                First Name:
-              </td>
-              <td style={{ paddingBottom: "1em", textAlign: "left" }}>
-                {user.firstName}
-              </td>
-            </tr>
-            <tr>
-              {" "}
-              <td style={{ paddingBottom: "1em", textAlign: "left" }}>
-                Last Name:
-              </td>
-              <td style={{ paddingBottom: "1em", textAlign: "left" }}>
-                {user.lastName}
-              </td>
-            </tr>
-            <tr>
+{/*             <tr>
               {" "}
               <td style={{ paddingBottom: "1em", textAlign: "left" }}>
                 Admin:
@@ -64,7 +42,7 @@ function AccountDetails({ user, toEdit, toOverview }) {
               <td style={{ paddingBottom: "1em", textAlign: "left" }}>
                 {user.admin}
               </td>
-            </tr>
+            </tr> */}
           </table>
           {backButtonElement}
           {editButtonElement}

@@ -14,7 +14,6 @@ import EditForm from "./components/useraccount/EditForm";
 import CreateWorkspaceForm from "./components/workspace/CreateWorkspaceForm";
 import CreateGroupForm from "./components/workspace/CreateGroupForm";
 import jwt_decode from "jwt-decode";
-import useAxios from "./utils/useAxios";
 
 export const GlobalContext = createContext();
 
@@ -50,7 +49,7 @@ function App() {
   const requests = {
     login,
     register,
-    updateUser,
+    /*     updateUser, */
   };
 
   // TODO: remove toXY functions, replace with navigate(xy)
@@ -157,16 +156,11 @@ function App() {
       const response = await fetch(url, request).catch((error) =>
         console.error("There was an error!", error)
       );
-      // TODO: add might be a different status code
-      if (response.status === 200) {
+      if (response.status === 201) {
         toLogin();
       }
     };
     addUser();
-  };
-
-  const updateUser = (userData) => {
-    console.log("update", userData);
   };
 
   const addWorkspace = (data) => {
@@ -207,7 +201,7 @@ function App() {
   const accountEditElement = (
     <EditForm
       user={user}
-      sendUpdateRequest={updateUser}
+      /*       sendUpdateRequest={updateUser} */
       toDetails={toDetails}
     />
   );
@@ -231,6 +225,7 @@ function App() {
     setToken,
     guards,
     navigate,
+    logout,
   };
 
   return (
