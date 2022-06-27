@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../ui-common/Button";
 
 // TODO: alter model in backend
@@ -55,6 +55,63 @@ const dummyWorkspaces = [
 ];
 
 function Workspace({ toCreateGroup, toCreateWorkspace, toOverview }) {
+  const getWorkspaces = () => {
+    console.log("get workplaces");
+    const url = "http://localhost:8000/workspace/";
+    const request = {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+      mode: "cors",
+    };
+    const sendGet = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendGet();
+  };
+
+  const getGroups = () => {
+    console.log("get groups");
+    const url = "http://localhost:8000/workspace/groups";
+    const request = {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+      mode: "cors",
+    };
+    const sendGet = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendGet();
+  };
+  const [workspaces, setWorkspaces] = useState([]);
+  const [groups, setGroups] = useState([]);
+
+  useEffect(() => {
+    const setInitialValuses = async () => {
+      console.log("set initial values");
+      setWorkspaces(await getWorkspaces());
+      setGroups(await getGroups());
+    };
+    setInitialValuses();
+  }, []);
+
   const addWorkspaceButtonElement = (
     <Button title="Create Workspace" onClick={toCreateWorkspace} />
   );
@@ -75,15 +132,17 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview }) {
           </tr>
         </thead>
         <tbody>
-          {dummyWorkspaces.map(({ name, group, info }) => (
-            <tr>
-              <td>{name}</td>
-              <td>{group}</td>
-              <td>{info.comment}</td>
-              <td>{info.isBarrierFree ? "Yes" : "No"}</td>
-              <td>{info.hasComputer ? "Yes" : "No"}</td>
-            </tr>
-          ))}
+          {workspaces.map(
+            ({ name, comment, is_barrier_free, has_computer, group }) => (
+              <tr>
+                <td>{name}</td>
+                <td>{group}</td>
+                <td>{comment}</td>
+                <td>{is_barrier_free ? "Yes" : "No"}</td>
+                <td>{has_computer ? "Yes" : "No"}</td>
+              </tr>
+            )
+          )}
         </tbody>
       </table>
     </>
@@ -97,7 +156,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview }) {
           </tr>
         </thead>
         <tbody>
-          {dummyGroups.map(({ name }) => (
+          {groups.map(({ name }) => (
             <tr>
               <td>{name}</td>
             </tr>
