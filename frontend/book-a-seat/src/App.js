@@ -195,6 +195,7 @@ function App() {
       toCreateGroup={toCreateGroup}
       toCreateWorkspace={toCreateWorkspace}
       toOverview={toOverview}
+      token={token}
     />
   );
   const reservationElement = <Reservation />;
@@ -209,10 +210,15 @@ function App() {
     <CreateWorkspaceForm
       sendCreateRequest={addWorkspace}
       toWorkspace={toWorkspace}
+      token={token}
     />
   );
   const createGroupElement = (
-    <CreateGroupForm sendCreateRequest={addGroup} toWorkspace={toWorkspace} />
+    <CreateGroupForm
+      sendCreateRequest={addGroup}
+      toWorkspace={toWorkspace}
+      token={token}
+    />
   );
 
   const navigate = useNavigate();

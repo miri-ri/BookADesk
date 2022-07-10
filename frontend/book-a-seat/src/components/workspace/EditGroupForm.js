@@ -5,19 +5,18 @@ import { URLs } from "../../App";
 import { useContext } from "react";
 import { GlobalContext } from "../../App";
 
-function CreateGroupForm({ sendCreateRequest, toWorkspace, token }) {
-  const [name, setName] = useState("");
+function EditGroupForm({ group, toWorkspace, token }) {
+  const [name, setName] = useState(group.name);
 
   const { navigate } = useContext(GlobalContext);
 
-  const addGroup = () => {
-    console.log("add workplace");
-    const url = "http://localhost:8000/workspace/group/add/";
+  const editGroup = () => {
+    const url = "http://localhost:8000/workspace/group/edit/" + group.id + "/";
     const newGroup = {
       name,
     };
     const request = {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${token.access}`,
@@ -30,8 +29,8 @@ function CreateGroupForm({ sendCreateRequest, toWorkspace, token }) {
         console.error("There was an error!", error)
       );
       console.log(response);
-      if (response.status === 201) {
-        navigate(URLs.workspaceURL);
+      if (response.status === 200) {
+        toWorkspace();
         console.log("success");
       }
     };
@@ -53,10 +52,10 @@ function CreateGroupForm({ sendCreateRequest, toWorkspace, token }) {
           </div>
         </form>
         <Button title="Back" onClick={toWorkspace} />
-        <Button title="Create Group" onClick={() => addGroup()} />
+        <Button title="Edit Group" onClick={() => editGroup()} />
       </div>
     </>
   );
 }
 
-export default CreateGroupForm;
+export default EditGroupForm;

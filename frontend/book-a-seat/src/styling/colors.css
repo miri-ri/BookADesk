@@ -8,6 +8,32 @@
   color: white;
 }
 
+.btn-delete {
+  background-color: lightcoral;
+  color: black;
+}
+
+.btn-delete:hover {
+  background-color: rgb(235, 89, 89);
+  color: black;
+}
+
+.btn-edit {
+  background-color: orange;
+  color: black;
+}
+
+.btn-edit:hover {
+  background-color: rgb(202, 131, 0);
+  color: black;
+}
+
+.btn-edit svg {
+  width: auto;
+  height: auto;
+  margin-top: auto;
+}
+
 .btn:focus {
   box-shadow: none;
 }

@@ -1,67 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { GlobalContext, URLs } from "../../App";
 import Button from "../ui-common/Button";
+import EditWorkspaceForm from "./EditWorkspaceForm";
+import EditGroupForm from "./EditGroupForm";
 
-// TODO: alter model in backend
-const dummyGroups = [
-  {
-    // unique
-    name: "table 01",
-  },
-  {
-    name: "room 01",
-  },
-  {
-    name: "room 02",
-  },
-];
+function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
+  const { navigate } = useContext(GlobalContext);
+  const editWorkspaceURL = "/edit-workspace/";
 
-const dummyWorkspaces = [
-  {
-    name: "seat 01",
-    group: "table 01",
-    info: {
-      comment: "normal workspace",
-      isBarrierFree: false,
-      hasComputer: false,
-    },
-  },
-  {
-    name: "seat 02",
-    group: "table 01",
-    info: {
-      comment: "normal workspace",
-      isBarrierFree: false,
-      hasComputer: false,
-    },
-  },
-  {
-    name: "seat 03",
-    group: "table 01",
-    info: {
-      comment: "normal workspace",
-      isBarrierFree: false,
-      hasComputer: false,
-    },
-  },
-  {
-    name: "seat 04",
-    group: "room 01",
-    info: {
-      comment: "room space",
-      isBarrierFree: false,
-      hasComputer: true,
-    },
-  },
-];
-
-function Workspace({ toCreateGroup, toCreateWorkspace, toOverview }) {
   const getWorkspaces = () => {
     console.log("get workplaces");
+    console.log(token);
     const url = "http://localhost:8000/workspace/";
     const request = {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${token.access}`,
       },
       mode: "cors",
     };
@@ -76,15 +31,46 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview }) {
       }
     };
     return sendGet();
+  };
+
+  const toEditWorkspace = () => {
+    navigate("workspace" + editWorkspaceURL);
+  };
+
+  const deleteWorkspace = (id) => {
+    console.log("delete workplaces");
+    console.log(token);
+    const url = "http://localhost:8000/workspace/delete/" + id + "/";
+    const request = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token.access}`,
+      },
+      mode: "cors",
+    };
+    const sendDelete = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendDelete();
   };
 
   const getGroups = () => {
     console.log("get groups");
-    const url = "http://localhost:8000/workspace/groups";
+    console.log(token);
+    const url = "http://localhost:8000/workspace/group";
     const request = {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${token.access}`,
       },
       mode: "cors",
     };
@@ -100,15 +86,45 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview }) {
     };
     return sendGet();
   };
+
+  const deleteGroup = (id) => {
+    console.log("delete group");
+    console.log(token);
+    const url = "http://localhost:8000/workspace/group/delete/" + id + "/";
+    const request = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token.access}`,
+      },
+      mode: "cors",
+    };
+    const sendDelete = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendDelete();
+  };
+
   const [workspaces, setWorkspaces] = useState([]);
   const [groups, setGroups] = useState([]);
+  const [mode, setMode] = useState("overview");
+  const [workspaceToEdit, setWorkspaceToEdit] = useState({});
+  const [groupToEdit, setGroupToEdit] = useState({});
+
+  const setInitialValuses = async () => {
+    const temp = await getWorkspaces();
+    console.log(temp);
+    setWorkspaces(temp);
+    setGroups(await getGroups());
+  };
 
   useEffect(() => {
-    const setInitialValuses = async () => {
-      console.log("set initial values");
-      setWorkspaces(await getWorkspaces());
-      setGroups(await getGroups());
-    };
     setInitialValuses();
   }, []);
 
@@ -132,17 +148,59 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview }) {
           </tr>
         </thead>
         <tbody>
-          {workspaces.map(
-            ({ name, comment, is_barrier_free, has_computer, group }) => (
-              <tr>
-                <td>{name}</td>
-                <td>{group}</td>
-                <td>{comment}</td>
-                <td>{is_barrier_free ? "Yes" : "No"}</td>
-                <td>{has_computer ? "Yes" : "No"}</td>
-              </tr>
-            )
-          )}
+          {workspaces &&
+            workspaces.map(
+              ({ id, name, comment, is_barrier_free, has_computer, group }) => (
+                <tr>
+                  <td>{name}</td>
+                  <td>{group}</td>
+                  <td>{comment}</td>
+                  <td>{is_barrier_free ? "Yes" : "No"}</td>
+                  <td>{has_computer ? "Yes" : "No"}</td>
+                  <td>
+                    <Button
+                      onClick={() => {
+                        deleteWorkspace(id).then(() => setInitialValuses());
+                      }}
+                      title="x"
+                      style="delete"
+                    />
+                  </td>
+                  <td>
+                    <Button
+                      onClick={() => {
+                        setWorkspaceToEdit({
+                          id,
+                          name,
+                          comment,
+                          is_barrier_free,
+                          has_computer,
+                          group,
+                        });
+                        setMode("workspaceEdit");
+                      }}
+                      title={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-pencil-square"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                          <path
+                            fill-rule="evenodd"
+                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                          />
+                        </svg>
+                      }
+                      style="edit"
+                    ></Button>
+                  </td>
+                </tr>
+              )
+            )}
         </tbody>
       </table>
     </>
@@ -156,29 +214,94 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview }) {
           </tr>
         </thead>
         <tbody>
-          {groups.map(({ name }) => (
-            <tr>
-              <td>{name}</td>
-            </tr>
-          ))}
+          {groups &&
+            groups.map(({ id, name }) => (
+              <tr>
+                <td>{name}</td>
+                <td>
+                  <Button
+                    onClick={() => {
+                      deleteGroup(id).then(setInitialValuses);
+                    }}
+                    title="x"
+                    style="delete"
+                  />
+                </td>
+                <td>
+                  <Button
+                    onClick={() => {
+                      //editGroup(id);
+                      setGroupToEdit({ id, name });
+                      setMode("groupEdit");
+                    }}
+                    title={
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-pencil-square"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                        <path
+                          fill-rule="evenodd"
+                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                        />
+                      </svg>
+                    }
+                    style="edit"
+                  ></Button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </>
   );
 
+  const workspaceOverviewElement = (
+    <div className="body">
+      <h4>Workspaces</h4>
+      {workspaceTableElement}
+      <br></br>
+      <h4>Groups</h4>
+      {groupTableElement}
+      <br></br>
+      {addWorkspaceButtonElement}
+      {addGroupButtonElement}
+      {backButtonElement}
+    </div>
+  );
+
+  const workspaceEditElement = (
+    <EditWorkspaceForm
+      token={token}
+      workspace={workspaceToEdit}
+      toWorkspace={() => {
+        setMode("overview");
+        setInitialValuses();
+      }}
+    />
+  );
+  const groupEditElement = (
+    <EditGroupForm
+      token={token}
+      group={groupToEdit}
+      toWorkspace={() => {
+        setMode("overview");
+        setInitialValuses();
+      }}
+    />
+  );
+
   return (
     <>
-      <div className="body">
-        <h4>Workspaces</h4>
-        {workspaceTableElement}
-        <br></br>
-        <h4>Groups</h4>
-        {groupTableElement}
-        <br></br>
-        {addWorkspaceButtonElement}
-        {addGroupButtonElement}
-        {backButtonElement}
-      </div>
+      {mode === "workspaceEdit"
+        ? workspaceEditElement
+        : mode === "groupEdit"
+        ? groupEditElement
+        : workspaceOverviewElement}
     </>
   );
 }

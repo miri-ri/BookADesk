@@ -4,14 +4,15 @@ import { URLs } from "../../App";
 import { useContext } from "react";
 import { GlobalContext } from "../../App";
 
-function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
+function EditWorkspaceForm({ toWorkspace, workspace, token }) {
   // TODO: save workspace state in one object (analog in other Components)
-  const [name, setName] = useState("");
-  const [group, setGroup] = useState("");
+  console.log("initial workplace state: ", workspace);
+  const [name, setName] = useState(workspace.name);
+  const [group, setGroup] = useState(workspace.group);
   // TODO: add isBarrierFree, hasComputer
-  const [comment, setComment] = useState("");
-  const [hasComputer, setHasComputer] = useState(false);
-  const [isBarrierFree, setIsBarrierFree] = useState(false);
+  const [comment, setComment] = useState(workspace.comment);
+  const [hasComputer, setHasComputer] = useState(workspace.has_computer);
+  const [isBarrierFree, setIsBarrierFree] = useState(workspace.is_barrier_free);
 
   const { navigate } = useContext(GlobalContext);
 
@@ -40,9 +41,9 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
     return sendGet();
   };
 
-  const addWorkspace = () => {
-    console.log("add workplace");
-    const url = "http://localhost:8000/workspace/add/";
+  const editWorkspace = () => {
+    console.log("edit workplace");
+    const url = "http://localhost:8000/workspace/edit/" + workspace.id + "/";
     const newWorkspace = {
       name,
       group,
@@ -52,7 +53,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
     };
     console.log(newWorkspace);
     const request = {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${token.access}`,
@@ -65,9 +66,9 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
         console.error("There was an error!", error)
       );
       console.log(response);
-      if (response.status === 201) {
+      if (response.status === 200) {
         console.log("success");
-        navigate(URLs.workspaceURL);
+        toWorkspace();
       }
     };
     sendPost();
@@ -140,10 +141,10 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
           </div>
         </form>
         <Button title="Back" onClick={toWorkspace} />
-        <Button title="Create Workspace" onClick={() => addWorkspace()} />
+        <Button title="Edit Workspace" onClick={() => editWorkspace()} />
       </div>
     </>
   );
 }
 
-export default CreateWorkspaceForm;
+export default EditWorkspaceForm;
