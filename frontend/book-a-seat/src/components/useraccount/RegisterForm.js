@@ -14,6 +14,7 @@ function RegisterForm({ toLogin, sendRegisterRequest }) {
           <div className="field">
             <label>Email address</label>
             <input
+              class="oneLineText"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -22,6 +23,7 @@ function RegisterForm({ toLogin, sendRegisterRequest }) {
           <div className="field">
             <label>Password</label>
             <input
+              class="oneLineText"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -30,6 +32,7 @@ function RegisterForm({ toLogin, sendRegisterRequest }) {
           <div className="field">
             <label>Username</label>
             <input
+              class="oneLineText"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}

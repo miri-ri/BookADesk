@@ -50,3 +50,26 @@
 .div-hidden {
 	display: none;
 }
+
+.star {
+	color:rgba(189, 212, 212, 0.747);
+}
+
+.star:hover, .star-clicked {
+	color: rgb(255, 189, 91);
+}
+
+.textfield {
+	margin: 3%;
+}
+
+.ratingButton {
+	float: right;
+	margin-right: 5%;
+	background-color: transparent;
+	border: 1px solid;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-weight: bold;
+}
+
