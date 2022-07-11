@@ -4,6 +4,8 @@ import "./Reservation.css";
 const amountShownDays = 7;
 const testUserID = 2;
 
+var selectedRoom = null;
+
 const saveButton = (
   <>
     <div id="saveButtonDiv" class="div-hidden">
@@ -14,53 +16,66 @@ const saveButton = (
     </div>
   </>
 );
-/* 
+
+const sendRatingButton = (
+  <>
+    <div id="sendRatingButton">
+      <button id="ratingButton" class="ratingButton" onClick={console.log("save")}>
+        Send Review
+      </button>
+      <br></br>
+    </div>
+  </>
+);
+
 let reservations = [
   {
     id: 1,
     user_id: 3,
-    seat_id: 1,
-    start: "2022-06-28T12:00:00+02:00",
+    seat_id: "a",
+    start: "2022-07-14T12:00:00+02:00",
     duration: 1,
   },
   {
     id: 2,
     user_id: 2,
-    seat_id: 2,
-    start: "2022-07-01T08:00:00+02:00",
+    seat_id: "b",
+    start: "2022-07-15T08:00:00+02:00",
     duration: 3,
   },
   {
     id: 3,
     user_id: 2,
-    seat_id: 1,
-    start: "2022-06-30T14:00:00+02:00",
+    seat_id: "a",
+    start: "2022-07-15T14:00:00+02:00",
     duration: 2,
   },
   {
     id: 4,
     user_id: 1,
-    seat_id: 3,
-    start: "2022-06-29T11:00:00+02:00",
+    seat_id: "c",
+    start: "2022-07-16T11:00:00+02:00",
     duration: 4,
   },
   {
     id: 5,
     user_id: 2,
-    seat_id: 3,
-    start: "2022-06-27T11:00:00+02:00",
+    seat_id: "c",
+    start: "2022-07-16T11:00:00+02:00",
     duration: 6,
   },
   {
-    id: 5,
+    id: 6,
     user_id: 1,
-    seat_id: 3,
-    start: "2022-06-28T12:00:00+02:00",
+    seat_id: "c",
+    start: "2022-07-17T12:00:00+02:00",
     duration: 4,
   },
 ];
- */
-/* let workplaces = ["1", "2", "3", "4", "5"]; */
+
+let workspaces = [{name:"1"}, {name:"2"}, {name:"3"}, {name:"4"}, {name:"5"}, {name:"6"}];
+
+let groups = [{name:"a"}, {name:"b"}, {name:"c"}];
 
 function getWorkspaces() {
   console.log("get workplaces");
@@ -134,7 +149,7 @@ function getGroups(){
 
 
 function Reservation() {
-  const [workspaces, setWorkspaces] = useState([]);
+  /*const [workspaces, setWorkspaces] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [groups, setGroups] = useState([]);
 
@@ -146,7 +161,7 @@ function Reservation() {
       setGroups(await getGroups());
     };
     setInitialValuses();
-  }, []);
+  }, []);*/
 
   var currentTime = new Date();
 
@@ -161,6 +176,17 @@ function Reservation() {
     times.push(i);
   }
 
+  const rating_form = (
+    <>
+    <div className="reviewTextForm">
+        <form>
+        <textarea class="textfield" id="reviewText" rows="3"></textarea>
+        {sendRatingButton}
+        </form>
+        <br></br>
+      </div>
+    </>
+  )
   const r = reservations.filter(checkUser);
 
   const myReservations = (
@@ -173,10 +199,12 @@ function Reservation() {
             <th scope="col">Seat</th>
             <th scope="col">Date</th>
             <th scope="col">Time</th>
+            <th scape="col">Rating</th>
           </tr>
         </thead>
         <tbody>
-          {r.map((r) => (
+          {r.map((r, index) => (
+            <>
             <tr>
               <td>{r.seat_id}</td>
               <td>{getDateFormat(new Date(r.start))}</td>
@@ -186,12 +214,24 @@ function Reservation() {
                   (new Date(r.start).getHours() + r.duration) +
                   ":00"}
               </td>
+              <td>
+                {[...Array(5)].map((star, indexStar) => starRating(star, index, indexStar))}
+              </td>
             </tr>
+            </>
           ))}
         </tbody>
       </table>
+
+      {rating_form}
     </>
   );
+
+  function starRating(star, index, indexStar){
+    return (
+      <span className="star" id={r+"_"+indexStar} onClick={(e)=>{console.log(e)}}><i class="fa fa-star"></i> </span>
+    )
+  }
 
   var counter = 0;
 
@@ -208,14 +248,13 @@ function Reservation() {
         {days &&
           days.map(
             (day, i) =>
-              groups &&
-              groups.map((group, index) => (
+              workspaces &&
+              workspaces.map((workspace, index) => (
                 <th
                   class="cell-selected"
                   id={i + "_seat_" + index}
-                  onClick={(e) => buttonRoom(i + "_room_" + index)}
                 >
-                  {group.name}
+                  {workspace.name}
                 </th>
               ))
           )}
@@ -294,12 +333,27 @@ function buttonRoom(id) {
   console.log(id);
   var element = document.getElementById(id);
   var row = document.getElementById("seats-row");
-  if (element.className === "cell-selected") {
+  if (element.className === "cell-selected" && selectedRoom==id) {
     element.className = "t-head";
     row.className = "div-hidden";
-  } else {
+    selectedRoom = null;
+    changeCellWidth(groups.length);
+  } else if (selectedRoom==null){
     element.className = "cell-selected";
     row.className = "t-row";
+    selectedRoom = id;
+    changeCellWidth(6); //todo: zugehörige Workspaces pro Gruppe auslesen
+  }
+}
+
+function changeCellWidth(width) {
+  for(let i = 0; i<amountShownDays; i++){
+    var day = document.getElementById("day_"+i);
+    day.colSpan = width;
+    for(let k = 0; k<3; k++){
+      var group = document.getElementById(i+"_room_"+k);
+      group.colSpan = width/3;
+    }
   }
 }
 
