@@ -73,6 +73,7 @@ function EditForm({ toDetails }) {
           <div className="field">
             <label>Email address</label>
             <input
+              class="oneLineText"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -81,6 +82,7 @@ function EditForm({ toDetails }) {
           <div className="field">
             <label>Username</label>
             <input
+              class="oneLineText"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
