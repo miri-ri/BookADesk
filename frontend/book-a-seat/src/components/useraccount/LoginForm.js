@@ -15,6 +15,7 @@ function LoginForm({ toRegister, sendLoginRequest }) {
             <label id="usernameInput">Username</label>
             <br></br>
             <input
+              class="oneLineText"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -24,6 +25,7 @@ function LoginForm({ toRegister, sendLoginRequest }) {
             <label id="passwordInput">Password</label>
             <br></br>
             <input
+              class="oneLineText"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
