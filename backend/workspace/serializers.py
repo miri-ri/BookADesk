@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Workspace
-from .models import Group
+from .models import Workspace, Group, Rating
+
 
 
 class WorkspaceSerializer(serializers.ModelSerializer):
@@ -12,4 +12,9 @@ class WorkspaceSerializer(serializers.ModelSerializer):
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
+        fields = ('__all__')
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
         fields = ('__all__')

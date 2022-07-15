@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Avg
+from reservation.models import Reservation
 
 
 class Group (models.Model):
@@ -11,5 +13,12 @@ class Workspace(models.Model):
     is_barrier_free = models.BooleanField()
     has_computer = models.BooleanField()
     group = models.CharField(max_length=25)
-    """ models.ForeignKey(Group, on_delete=models.CASCADE)
- """
+    workspace_rating = models.FloatField(default=0)
+    #group = models.ForeignKey(Group, on_delete=models.CASCADE)
+
+class Rating(models.Model):
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
+    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
+    review = models.CharField(max_length=500)
+    star_rating = models.IntegerField()
+
