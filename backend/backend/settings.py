@@ -174,3 +174,9 @@ SIMPLE_JWT = {
 CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = "accounts.CustomUser"
+
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'postmaster@sandboxe28c1cf4fc454b8eb60f65c00348b285.mailgun.org'
+EMAIL_HOST_PASSWORD = 'bfd378e6e061376aa84ceb26e9c77ffd-1b8ced53-79688e3b'
+EMAIL_USE_TLS = True
