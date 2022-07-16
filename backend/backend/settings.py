@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'workspace.apps.WorkspaceConfig',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    'accounts.apps.AccountsConfig'
+
 ]
 
 MIDDLEWARE = [
@@ -170,3 +172,5 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+AUTH_USER_MODEL = "accounts.CustomUser"

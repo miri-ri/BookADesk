@@ -6,13 +6,13 @@ from django.http import JsonResponse
 from api.serializer import MyTokenObtainPairSerializer, RegisterSerializer,UserSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
-from django.contrib.auth.models import User
+from accounts.models import CustomUser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -20,7 +20,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
