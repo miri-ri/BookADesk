@@ -121,7 +121,8 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
     const temp = await getWorkspaces();
     console.log(temp);
     setWorkspaces(temp);
-    setGroups(await getGroups());
+    const groupTemp = await getGroups();
+    setGroups(groupTemp);
   };
 
   useEffect(() => {
@@ -129,7 +130,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   }, []);
 
   const addWorkspaceButtonElement = (
-    <Button title="Create Workspace" onClick={toCreateWorkspace} />
+    <Button title="Create Workspace" onClick={() => groups.length > 0 && toCreateWorkspace()} />
   );
   const addGroupButtonElement = (
     <Button title="Create Group" onClick={toCreateGroup} />
