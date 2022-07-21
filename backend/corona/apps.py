@@ -1,4 +1,7 @@
 from ..reservation.views import ReservationList
+from django.core.mail import send_mail
+from ..users.models import User
+
 
 # Workspace.objects.get(id=workspace_id)
 class CoronaSendMails():
@@ -16,5 +19,11 @@ class CoronaSendMails():
         return reservation_start > today() - sinceDay # TODO how to get current day?
 
     def sendMailToUser(self, user_id):
-        pass
-        # TODO
+        user = User.objects.get(user_id=user_id)
+        send_mail(
+            'Corona Kontaktperson',
+            'Dies ist eine Warnung. Durch eine Ihrer Reservierungen hatten Sie Kontakt mit einer nachweißlich Covid-positiven Person.',
+            'support@bookadesk.de',
+            [user.email],
+            fail_silently=False,
+        )
