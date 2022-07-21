@@ -6,9 +6,7 @@ from ..users.models import User
 
 
 class CoronaSendMails():
-    def searchPeople(self):
-        sinceDay = 0 # TODO aus URL extrahieren
-        user_id = 0  # TODO aus URL extrahieren
+    def searchPeople(self, sinceDay, user_id):
         for reservation in ReservationList().get_queryset():
             if reservation.user_id == user_id:
                 if self._isInInfectionPeriod(reservation.start, sinceDay):
