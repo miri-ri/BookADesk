@@ -49,9 +49,9 @@ def reset_request(request):
     if CustomUser.objects.filter(email=email).exists():
         # send email with otp
         send_mail(
-        'Subject here',
-        f'Here is the message with {user.otp}.',
-        'from@example.com',
+        'Wiederherstellung des Passworts',
+        f'Hier ist dein OTP {user.otp}.',
+        'support@bookadesk.de',
         [user.email],
         fail_silently=False,
         )
@@ -70,8 +70,8 @@ def reset_password(request):
     user = CustomUser.objects.get(email=data['email'])
     if user.is_active:
         # Check if otp is valid
-        if data['otp'] == user.opt:
-            if new_password != '':
+        if data['otp'] == user.otp:
+            if data['password'] != '':
                 # Change Password
                 user.set_password(data['password'])
                 user.save() # Here user otp will also be changed on save automatically
