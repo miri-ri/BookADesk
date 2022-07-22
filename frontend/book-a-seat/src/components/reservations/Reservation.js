@@ -77,81 +77,83 @@ let workspaces = [{name:"1"}, {name:"2"}, {name:"3"}, {name:"4"}, {name:"5"}, {n
 
 let groups = [{name:"a"}, {name:"b"}, {name:"c"}];
 
-function getWorkspaces() {
-  console.log("get workplaces");
-  const url = "http://localhost:8000/workspace/";
-  const request = {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-    },
-    mode: "cors",
+function Reservation({token}) {
+  function getWorkspaces() {
+    console.log("get workplaces");
+    const url = "http://localhost:8000/workspace/";
+    const request = {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token.access}`,
+      },
+      mode: "cors",
+    };
+    const sendGet = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendGet();
+  }
+  
+  function getReservations() {
+    console.log("get reservations");
+    const url = "http://localhost:8000/reservations/";
+    const request = {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token.access}`,
+      },
+      mode: "cors",
+    };
+    const sendGet = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendGet();
+  }
+  
+  const getGroups = () => {
+    console.log("get groups");
+    console.log(token);
+    const url = "http://localhost:8000/workspace/group";
+    const request = {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token.access}`,
+      },
+      mode: "cors",
+    };
+    const sendGet = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendGet();
   };
-  const sendGet = async () => {
-    const response = await fetch(url, request).catch((error) =>
-      console.error("There was an error!", error)
-    );
-    console.log(response);
-    if (response.status === 200) {
-      console.log("success");
-      return await response.json();
-    }
-  };
-  return sendGet();
-}
 
-function getReservations() {
-  console.log("get reservations");
-  const url = "http://localhost:8000/reservations/";
-  const request = {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-    },
-    mode: "cors",
-  };
-  const sendGet = async () => {
-    const response = await fetch(url, request).catch((error) =>
-      console.error("There was an error!", error)
-    );
-    console.log(response);
-    if (response.status === 200) {
-      console.log("success");
-      return await response.json();
-    }
-  };
-  return sendGet();
-}
-
-function getGroups(){
-  console.log("get reservations");
-  const url = "http://localhost:8000/workspace/groups";
-  const request = {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-    },
-    mode: "cors",
-  };
-  const sendGet = async () => {
-    const response = await fetch(url, request).catch((error) =>
-      console.error("There was an error!", error)
-    );
-    console.log(response);
-    if (response.status === 200) {
-      console.log("success");
-      return await response.json();
-    }
-  };
-  return sendGet();
-}
-
-
-
-function Reservation() {
-  /*const [workspaces, setWorkspaces] = useState([]);
-  const [reservations, setReservations] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [workspaces1, setWorkspaces] = useState([]);
+  const [reservations1, setReservations] = useState([]);
+  const [groups1, setGroups] = useState([]);
 
   useEffect(() => {
     const setInitialValuses = async () => {
@@ -161,7 +163,10 @@ function Reservation() {
       setGroups(await getGroups());
     };
     setInitialValuses();
-  }, []);*/
+  }, []);
+
+  console.log("test")
+  console.log(reservations1)
 
   var currentTime = new Date();
 
@@ -178,7 +183,8 @@ function Reservation() {
 
   const rating_form = (
     <>
-    <div className="reviewTextForm">
+    <div id="ratingFormDiv" className="div-hidden">
+        <h2 style={{marginTop:"2%", marginBottom:"-2%"}}>Write a review:</h2>
         <form>
         <textarea class="textfield" id="reviewText" rows="3"></textarea>
         {sendRatingButton}
@@ -229,15 +235,38 @@ function Reservation() {
 
   function starRating(star, index, indexStar){
     return (
-      <span className="star" id={r+"_"+indexStar} onClick={(e)=>{console.log(e)}}><i class="fa fa-star"></i> </span>
+      <span className="star" id={index+"_"+indexStar} onClick={(e)=>{
+        if(document.getElementById(index+"_"+indexStar).className==="star-clicked"){
+          for(let i = 0; i<5; i++){
+            var element = document.getElementById(index+"_"+i)
+            element.className="star"
+          }
+        } else {
+          for(let i = 0; i<5; i++){
+            var element = document.getElementById(index+"_"+i)
+            element.className="star-clicked"
+            if(i>indexStar){
+              element.className="star"
+            }
+          }
+          var counter = 0;
+          while(document.getElementById(counter+"_"+0)!=null){
+            if(counter!=index){
+              for(let i = 0; i<5; i++){
+                var element = document.getElementById(counter+"_"+i)
+                element.className="star"
+              }
+            }
+            counter++;
+          }
+          var reviewForm = document.getElementById("ratingFormDiv");
+          reviewForm.className = "rewieTextForm"
+        }
+      }}><i class="fa fa-star"></i> </span>
     )
   }
 
   var counter = 0;
-
-  var col = groups.length;
-
-  var selectedRoom = 0;
 
   const seats = (
     <>
@@ -248,8 +277,8 @@ function Reservation() {
         {days &&
           days.map(
             (day, i) =>
-              workspaces &&
-              workspaces.map((workspace, index) => (
+              workspaces1 &&
+              workspaces1.map((workspace, index) => (
                 <th
                   class="cell-selected"
                   id={i + "_seat_" + index}
@@ -270,7 +299,7 @@ function Reservation() {
             <th scope="col" class="sidebar"></th>
             {days &&
               days.map((e, index) => (
-                <th id={"day_" + index} class="t-head" colSpan={col}>
+                <th id={"day_" + index} class="t-head" colSpan={groups1.length}>
                   {e}
                 </th>
               ))}
@@ -282,12 +311,12 @@ function Reservation() {
             {days &&
               days.map(
                 (day, i) =>
-                  groups &&
-                  groups.map((group, index) => (
+                  groups1 &&
+                  groups1.map((group, index) => (
                     <th
                       class="t-head"
                       id={i + "_room_" + index}
-                      onClick={(e) => buttonRoom(i + "_room_" + index)}
+                      onClick={(e) => buttonRoom(i, index)}//buttonRoom(i + "_room_" + index)}
                     >
                       {group.name}
                     </th>
@@ -305,8 +334,8 @@ function Reservation() {
               {days &&
                 days.map(
                   (day) =>
-                    groups &&
-                    groups.map((group) =>
+                    groups1 &&
+                    groups1.map((group) =>
                       checkBooked(reservations, group.name, day, time)
                     )
                 )}
@@ -317,6 +346,41 @@ function Reservation() {
       {saveButton}
     </>
   );
+
+  function buttonRoom(day, index) {
+    const id = day + "_room_" + index;
+    console.log(id);
+    var element = document.getElementById(id);
+    var row = document.getElementById("seats-row");
+    if (element.className === "cell-selected" && selectedRoom==id) {
+      for(let i=0; i<amountShownDays; i++){
+        var element = document.getElementById(i + "_room_" + index);
+        element.className = "t-head";
+      }
+      row.className = "div-hidden";
+      selectedRoom = null;
+      changeCellWidth(groups1.length);
+    } else if (selectedRoom==null){
+      for(let i=0; i<amountShownDays; i++){
+        var element = document.getElementById(i + "_room_" + index);
+        element.className = "cell-selected";
+      }
+      row.className = "t-row";
+      selectedRoom = id;
+      changeCellWidth(workspaces1.length);
+    }
+  }
+
+  function changeCellWidth(width) {
+    for(let i = 0; i<amountShownDays; i++){
+      var day = document.getElementById("day_"+i);
+      day.colSpan = width;
+      for(let k = 0; k<groups1.length; k++){
+        var group = document.getElementById(i+"_room_"+k);
+        group.colSpan = width/groups1.length;
+      }
+    }
+  }
 
   return (
     <>
@@ -329,33 +393,9 @@ function Reservation() {
   );
 }
 
-function buttonRoom(id) {
-  console.log(id);
-  var element = document.getElementById(id);
-  var row = document.getElementById("seats-row");
-  if (element.className === "cell-selected" && selectedRoom==id) {
-    element.className = "t-head";
-    row.className = "div-hidden";
-    selectedRoom = null;
-    changeCellWidth(groups.length);
-  } else if (selectedRoom==null){
-    element.className = "cell-selected";
-    row.className = "t-row";
-    selectedRoom = id;
-    changeCellWidth(6); //todo: zugehörige Workspaces pro Gruppe auslesen
-  }
-}
 
-function changeCellWidth(width) {
-  for(let i = 0; i<amountShownDays; i++){
-    var day = document.getElementById("day_"+i);
-    day.colSpan = width;
-    for(let k = 0; k<3; k++){
-      var group = document.getElementById(i+"_room_"+k);
-      group.colSpan = width/3;
-    }
-  }
-}
+
+
 
 var selectedSlots_ID = [];
 
