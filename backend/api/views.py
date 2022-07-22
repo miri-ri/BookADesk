@@ -10,6 +10,12 @@ from accounts.models import CustomUser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.views.generic import View
+from django.conf import settings
+import logging
+import urllib.request
+import os
 
 
 
@@ -88,6 +94,28 @@ def reset_password(request):
         message = {
             'detail': 'Something went wrong'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FrontendAppView(View):
+    """
+    Serves the compiled frontend entry point (only works if you have run `yarn
+    run build`).
+    """
+def get(self, request):
+        print (os.path.join(settings.REACT_APP_DIR, 'build', 'index.html'))
+        try:
+            with open(os.path.join(settings.REACT_APP_DIR, 'build', 'index.html')) as f:
+                return HttpResponse(f.read())
+        except FileNotFoundError:
+            logging.exception('Production build of app not found')
+            return HttpResponse(
+                """
+                This URL is only used when you have built the production
+                version of the app. Visit http://localhost:3000/ instead, or
+                run `yarn run build` to test the production version.
+                """,
+                status=501,
+            )
 
 
 
