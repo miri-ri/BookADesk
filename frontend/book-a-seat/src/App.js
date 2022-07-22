@@ -170,6 +170,50 @@ function App() {
     addUser();
   };
 
+  const resetPasswordRequest = (email) => {
+    return;
+/*     const url = "http://localhost:8000/api/register/";
+    const request = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify(user),
+    };
+    const addUser = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      if (response.status === 201) {
+        toLogin();
+      }
+    };
+    addUser(); */
+  };
+
+  const setNewPasswordRequest = (email, otp, newPassword) => {
+    return;
+/*     const url = "http://localhost:8000/api/register/";
+    const request = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify(user),
+    };
+    const addUser = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      if (response.status === 201) {
+        toLogin();
+      }
+    };
+    addUser(); */
+  };
+
   const addWorkspace = (data) => {
     console.log("create workspace", data);
   };
@@ -209,11 +253,7 @@ function App() {
       token={token}
     />
   );
-  const reservationElement = (
-    <Reservation 
-      token={token}
-    />
-  );
+  const reservationElement = <Reservation token={token} />;
   const accountEditElement = (
     <EditForm
       user={user}
@@ -235,7 +275,13 @@ function App() {
       token={token}
     />
   );
-  const forgotPasswordElement = <ForgotPassword />;
+  const forgotPasswordElement = (
+    <ForgotPassword
+      toLogin={toLogin}
+      forgotPassword={resetPasswordRequest}
+      resetPassword={setNewPasswordRequest}
+    />
+  );
 
   const navigate = useNavigate();
 
