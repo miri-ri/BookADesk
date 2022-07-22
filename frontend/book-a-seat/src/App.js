@@ -14,6 +14,7 @@ import EditForm from "./components/useraccount/EditForm";
 import CreateWorkspaceForm from "./components/workspace/CreateWorkspaceForm";
 import CreateGroupForm from "./components/workspace/CreateGroupForm";
 import jwt_decode from "jwt-decode";
+import ForgotPassword from "./components/useraccount/ForgotPassword";
 
 export const GlobalContext = createContext();
 
@@ -28,6 +29,7 @@ export const URLs = {
   createGroupURL: "/workspace/create-group",
   createWorkspaceURL: "/workspace/create-workspace",
   reservationURL: "/reservation",
+  forgotPasswordURL: "/user/forgotPassword",
 };
 
 function App() {
@@ -87,6 +89,10 @@ function App() {
 
   const toReservation = () => {
     navigate("/reservation");
+  };
+
+  const toForgotPassword = () => {
+    navigate(URLs.forgotPasswordURL);
   };
 
   const login = ({ username, password }) => {
@@ -174,7 +180,11 @@ function App() {
 
   const welcomeElement = <Welcome toLogin={toLogin} />;
   const loginElement = (
-    <LoginForm toRegister={toRegister} sendLoginRequest={login} />
+    <LoginForm
+      toRegister={toRegister}
+      sendLoginRequest={login}
+      toForgotPassword={toForgotPassword}
+    />
   );
   const registerElement = (
     <RegisterForm toLogin={toLogin} sendRegisterRequest={register} />
@@ -221,6 +231,7 @@ function App() {
       token={token}
     />
   );
+  const forgotPasswordElement = <ForgotPassword />;
 
   const navigate = useNavigate();
 
@@ -256,6 +267,10 @@ function App() {
             path={URLs.createGroupURL}
             element={createGroupElement}
             toWorkspace={toWorkspace}
+          />
+          <Route
+            path={URLs.forgotPasswordURL}
+            element={forgotPasswordElement}
           />
         </Routes>
         <Footer />
