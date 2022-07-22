@@ -10,6 +10,12 @@ from accounts.models import CustomUser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.views.generic import View
+from django.conf import settings
+import logging
+import urllib.request
+import os
 
 
 
@@ -47,11 +53,10 @@ def reset_request(request):
     email = data['email']
     user = CustomUser.objects.get(email=email)
     if CustomUser.objects.filter(email=email).exists():
-        # send email with otp
         send_mail(
-        'Subject here',
-        f'Here is the message with {user.otp}.',
-        'from@example.com',
+        'Wiederherstellung des Passworts',
+        f'Hier ist dein OTP {user.otp}. Gebe ihn auf der Website ein um dein Passwort zu ändern',
+        'support@bookadesk.de',
         [user.email],
         fail_silently=False,
         )
@@ -65,14 +70,11 @@ def reset_request(request):
 
 @api_view(['PUT'])
 def reset_password(request):
-    """reset_password with email, OTP and new password"""
     data = request.data
     user = CustomUser.objects.get(email=data['email'])
     if user.is_active:
-        # Check if otp is valid
-        if data['otp'] == user.opt:
-            if new_password != '':
-                # Change Password
+        if data['otp'] == user.otp:
+            if data['password'] != '':
                 user.set_password(data['password'])
                 user.save() # Here user otp will also be changed on save automatically
                 return Response('any response or you can add useful information with response as well. ')
@@ -88,6 +90,28 @@ def reset_password(request):
         message = {
             'detail': 'Something went wrong'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FrontendAppView(View):
+    """
+    Serves the compiled frontend entry point (only works if you have run `yarn
+    run build`).
+    """
+def get(self, request):
+        print (os.path.join(settings.REACT_APP_DIR, 'build', 'index.html'))
+        try:
+            with open(os.path.join(settings.REACT_APP_DIR, 'build', 'index.html')) as f:
+                return HttpResponse(f.read())
+        except FileNotFoundError:
+            logging.exception('Production build of app not found')
+            return HttpResponse(
+                """
+                This URL is only used when you have built the production
+                version of the app. Visit http://localhost:3000/ instead, or
+                run `yarn run build` to test the production version.
+                """,
+                status=501,
+            )
 
 
 
