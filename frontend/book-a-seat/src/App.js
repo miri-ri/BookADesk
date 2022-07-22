@@ -33,11 +33,16 @@ export const URLs = {
 };
 
 function App() {
-  const [user, setUser] = useState(() =>
-    localStorage.getItem("token")
-      ? jwt_decode(localStorage.getItem("token"))
-      : null
-  );
+  const [user, setUser] = useState(() => {
+    const decodedTokenData = jwt_decode(localStorage.getItem("token"));
+    const user = {
+      username: decodedTokenData.username,
+      email: decodedTokenData.email,
+      id: decodedTokenData.user_id,
+    };
+    console.log(user);
+    return user;
+  });
   const [token, setToken] = useState(() =>
     JSON.parse(localStorage.getItem("token"))
   );
@@ -127,6 +132,7 @@ function App() {
           email: decodedTokenData.email,
           id: decodedTokenData.user_id,
         };
+        console.log(user);
         setUser(user);
         setToken(token);
         localStorage.setItem("token", JSON.stringify(token));
@@ -172,7 +178,7 @@ function App() {
 
   const resetPasswordRequest = (email) => {
     return;
-/*     const url = "http://localhost:8000/api/register/";
+    /*     const url = "http://localhost:8000/api/register/";
     const request = {
       method: "POST",
       headers: {
@@ -194,7 +200,7 @@ function App() {
 
   const setNewPasswordRequest = (email, otp, newPassword) => {
     return;
-/*     const url = "http://localhost:8000/api/register/";
+    /*     const url = "http://localhost:8000/api/register/";
     const request = {
       method: "POST",
       headers: {

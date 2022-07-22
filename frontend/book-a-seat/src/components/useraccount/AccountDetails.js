@@ -34,7 +34,7 @@ function AccountDetails({ toEdit, toOverview }) {
                 {user.username}
               </td>
             </tr>
-{/*             <tr>
+            {/*             <tr>
               {" "}
               <td style={{ paddingBottom: "1em", textAlign: "left" }}>
                 Admin:
