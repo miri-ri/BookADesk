@@ -209,7 +209,11 @@ function App() {
       token={token}
     />
   );
-  const reservationElement = <Reservation />;
+  const reservationElement = (
+    <Reservation 
+      token={token}
+    />
+  );
   const accountEditElement = (
     <EditForm
       user={user}
