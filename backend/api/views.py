@@ -53,10 +53,9 @@ def reset_request(request):
     email = data['email']
     user = CustomUser.objects.get(email=email)
     if CustomUser.objects.filter(email=email).exists():
-        # send email with otp
         send_mail(
         'Wiederherstellung des Passworts',
-        f'Hier ist dein OTP {user.otp}.',
+        f'Hier ist dein OTP {user.otp}. Gebe ihn auf der Website ein um dein Passwort zu ändern',
         'support@bookadesk.de',
         [user.email],
         fail_silently=False,
@@ -71,14 +70,11 @@ def reset_request(request):
 
 @api_view(['PUT'])
 def reset_password(request):
-    """reset_password with email, OTP and new password"""
     data = request.data
     user = CustomUser.objects.get(email=data['email'])
     if user.is_active:
-        # Check if otp is valid
         if data['otp'] == user.otp:
             if data['password'] != '':
-                # Change Password
                 user.set_password(data['password'])
                 user.save() # Here user otp will also be changed on save automatically
                 return Response('any response or you can add useful information with response as well. ')

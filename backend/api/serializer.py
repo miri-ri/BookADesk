@@ -50,9 +50,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email']
         )
-
-        send_mail('Neuer Account registriert', 'Neuer Account registriert', 'BookADesk@BookADesk.com', ['niklas.sumalvico@outlook.de'])
-
         user.set_password(validated_data['password'])
         user.save()
 
