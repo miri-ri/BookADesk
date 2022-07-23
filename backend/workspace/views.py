@@ -16,6 +16,11 @@ from django.contrib.admin.views.decorators import staff_member_required
 #@permission_classes([IsAuthenticated])
 def workspace_list(request):
     workspace = Workspace.objects.all()
+    for ws in workspace:
+        if  Rating.objects.filter(workspace=ws.id).count()>0:
+            stars = Rating.objects.filter(workspace=ws.id).aggregate(Avg('star_rating'))
+            ws.workspace_rating = stars.get('star_rating__avg')
+            ws.save(update_fields=['workspace_rating'])  
     serializer = WorkspaceSerializer(workspace, many=True)
     return Response(serializer.data)
 
@@ -34,9 +39,10 @@ def workspace_add(request):
 #@permission_classes([IsAuthenticated])
 def workspace_get(request, workspace_id):
     workspace = Workspace.objects.get(id=workspace_id)
-    stars = Rating.objects.filter(workspace=workspace_id).aggregate(Avg('star_rating'))
-    workspace.workspace_rating = stars.get('star_rating__avg')
-    workspace.save(update_fields=['workspace_rating'])
+    if  Rating.objects.filter(workspace=workspace_id).count()>0:
+        stars = Rating.objects.filter(workspace=workspace_id).aggregate(Avg('star_rating'))
+        workspace.workspace_rating = stars.get('star_rating__avg')
+        workspace.save(update_fields=['workspace_rating'])
     serializer = WorkspaceSerializer(workspace)
     return Response(serializer.data)
     

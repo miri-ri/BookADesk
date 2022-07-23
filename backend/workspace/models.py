@@ -12,9 +12,9 @@ class Workspace(models.Model):
     comment = models.CharField(max_length=150)
     is_barrier_free = models.BooleanField()
     has_computer = models.BooleanField()
-    group = models.CharField(max_length=25)
-    workspace_rating = models.FloatField(default=0)
-    #group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    #group = models.CharField(max_length=25)
+    workspace_rating = models.FloatField(default=0.0)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
 class Rating(models.Model):
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
