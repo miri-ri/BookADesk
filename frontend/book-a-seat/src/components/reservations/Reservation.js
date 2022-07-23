@@ -165,9 +165,6 @@ function Reservation({token}) {
     setInitialValuses();
   }, []);
 
-  console.log("test")
-  console.log(reservations1)
-
   var currentTime = new Date();
 
   var days = [];
@@ -233,9 +230,9 @@ function Reservation({token}) {
     </>
   );
 
-  function starRating(star, index, indexStar){
+  function starRating(_star, index, indexStar){
     return (
-      <span className="star" id={index+"_"+indexStar} onClick={(e)=>{
+      <span className="star" id={index+"_"+indexStar} onClick={(_e)=>{
         if(document.getElementById(index+"_"+indexStar).className==="star-clicked"){
           for(let i = 0; i<5; i++){
             var element = document.getElementById(index+"_"+i)
@@ -265,10 +262,12 @@ function Reservation({token}) {
       }}><i class="fa fa-star"></i> </span>
     )
   }
-
   var counter = 0;
 
-  const seats = (
+  var selectedGroup = null;
+  var showSeats;
+
+  var seats = (
     <>
       <tr id="seats-row" class="div-hidden">
         <th scope="col" class="sidebar">
@@ -276,9 +275,9 @@ function Reservation({token}) {
         </th>
         {days &&
           days.map(
-            (day, i) =>
-              workspaces1 &&
-              workspaces1.map((workspace, index) => (
+            (_day, i) =>
+              showSeats &&
+              showSeats.map((workspace, index) => (
                 <th
                   class="cell-selected"
                   id={i + "_seat_" + index}
@@ -310,13 +309,13 @@ function Reservation({token}) {
             </th>
             {days &&
               days.map(
-                (day, i) =>
+                (_day, i) =>
                   groups1 &&
                   groups1.map((group, index) => (
                     <th
                       class="t-head"
                       id={i + "_room_" + index}
-                      onClick={(e) => buttonRoom(i, index)}//buttonRoom(i + "_room_" + index)}
+                      onClick={(_e) => buttonRoom(i, index)}//buttonRoom(i + "_room_" + index)}
                     >
                       {group.name}
                     </th>
@@ -350,6 +349,12 @@ function Reservation({token}) {
   function buttonRoom(day, index) {
     const id = day + "_room_" + index;
     console.log(id);
+    selectedGroup=index;
+    showSeats=workspaces1.filter(function (e) {
+        console.log(groups1[selectedGroup].name)
+        return e.group==groups1[selectedGroup].name;
+    })
+    console.log(showSeats)
     var element = document.getElementById(id);
     var row = document.getElementById("seats-row");
     if (element.className === "cell-selected" && selectedRoom==id) {
@@ -416,72 +421,58 @@ function selectSlotToAdd(id) {
   console.log("Selected Slots: " + selectedSlots_ID);
 }
 
-function editSlot(workplace, date, time, id) {
+function editSlot(_workplace, _date, _time, id) {
   var e = document.getElementById(id);
   e.className = "cell-selected";
 }
 
 function saveChanges() {
-  /*var cutWorkplace = selectedSlots_ID.map(id => (id.split('_')[0] +"_"+ id.split('_')[1]))
-  var findDuplicates = cutWorkplace => cutWorkplace.filter((item, index) => cutWorkplace.indexOf(item) !== index)
-  var c = 0;
-  var duplicats = [];
-  selectedSlots_ID.map(id => findDuplicates(cutWorkplace).filter(d => d===id.split('_')[0] +"_"+ id.split('_')[1])).map(item => {
-    if(item.length!=0){
-      item = selectedSlots_ID[c]
-      duplicats.push(item)
-    }
-    c++;
-  })
-  var resWithoutDuplicats = selectedSlots_ID
-  console.log(duplicats)*/
 
+  // ID strings are being sorted
+  var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+  selectedSlots_ID.sort(collator.compare);
+
+  // saving ID strings in int array slotsInt
   var slotsInt = selectedSlots_ID.map((e) => [
     parseInt(e.split("_")[0]),
     parseInt(e.split("_")[1]),
     parseInt(e.split("_")[2]),
   ]);
-  var duplicates = slotsInt.map((i) => {
-    var later = [i[0], i[1], i[2] + 1];
-    if (
-      slotsInt.filter(
-        (f) => later[0] == f[0] && later[1] == f[1] && later[2] == f[2]
-      ).length != 0
-    ) {
-      console.log("earlier(i): " + i + ", later: " + later);
-      return i;
-    }
-  });
-  console.log(slotsInt);
-  console.log(duplicates);
-  // for loop über alle slots, counter für einen slot (auf platz 0 und 1), add to array[id, duration]
-  var reservations = [];
-  slotsInt.map((e) => {
-    var duration = 1;
-    for (let i = 0; i < duplicates.length; i++) {
-      if (
-        duplicates[i] != undefined &&
-        e[0] == duplicates[i][0] &&
-        e[1] == duplicates[i][1]
-      ) {
-        duplicates[i] = undefined;
-        duration++;
-      }
-    }
-    reservations.push([e, duration]);
-  });
-  console.log(reservations);
-  var fil = reservations.filter((a) => a[1] != 1);
-  console.log(fil);
 
-  // einzelne Slots werden zu längeren hinzugefügt
-  // ursprüngliche Liste wird durchgegangen, wenn element[0 und 1] gleich und [2]>=res[2] und [2]<res[2]+duration
-  var allRes = slotsInt.map((e) => {
-    if (e[0]) {
+  // removing all slots that arent the starting time
+  var idResStart = []
+  slotsInt.map(e => {
+    var before = e[0] + "_" + e[1] + "_" + (e[2]-1)
+    if(selectedSlots_ID.filter(str => {
+      if(str.indexOf(before) !== -1) {
+        return true;
+      }
+    }).length===0){
+      idResStart.push(e)
     }
-  });
-  // remove duplicates from slots
-  // add other slots as duration 1 (for loop oder map mit push funktion)
+  })
+
+  // figuring out the duration of the reservations
+  var lengths = []
+  idResStart.map(e => {
+    var counter = 1;
+    while(slotsInt.some(element => {
+      if (element[0] === e[0] && element[1] === e[1] && element[2] === e[2]+counter) {
+        return true;
+      }
+      return false;
+    })){
+      counter++;
+    }
+    lengths.push(counter)
+  })
+
+  console.log("idResStart")
+  console.log(idResStart);
+  console.log("lengths " + lengths)
+
+  // add new reservations to database
+  // todo: !
 }
 
 var diffDays = 0;
