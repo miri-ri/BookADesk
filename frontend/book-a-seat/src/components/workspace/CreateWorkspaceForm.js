@@ -78,7 +78,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
   const setInitialValuses = async () => {
     setGroups(
       await getGroups().then((val) => {
-        setGroup(val[0].name);
+        setGroup(val[0] && val[0].name);
         return val;
       })
     );

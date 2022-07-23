@@ -122,6 +122,7 @@ function App() {
           id: decodedTokenData.user_id,
         };
         setUser(user);
+        setToken(token);
         localStorage.setItem("token", JSON.stringify(token));
         toOverview();
       }
