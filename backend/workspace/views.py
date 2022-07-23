@@ -128,6 +128,7 @@ def rating_list(request, workspace_id):
     serializer = RatingSerializer(ratings, many=True)
     return Response(serializer.data)
 
+#TODO: funktioniert das so?? 
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def rating_add(request):
