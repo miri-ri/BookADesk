@@ -16,9 +16,9 @@ class Workspace(models.Model):
     workspace_rating = models.FloatField(default=0.0)
     #group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
+
 class Rating(models.Model):
-    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
+    workspace = models.CharField(max_length=25)
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
     review = models.CharField(max_length=500)
     star_rating = models.IntegerField()
-
