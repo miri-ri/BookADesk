@@ -19,6 +19,6 @@ class Workspace(models.Model):
 
 class Rating(models.Model):
     workspace = models.CharField(max_length=25)
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
+    reservation = models.CharField(max_length=25)
     review = models.CharField(max_length=500)
     star_rating = models.IntegerField()

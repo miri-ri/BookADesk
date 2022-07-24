@@ -18,7 +18,7 @@ var selectedRoom = null;
   </>
 ); */
 
-const sendRatingButton = (
+/* const sendRatingButton = (
   <>
     <div id="sendRatingButton">
       <button
@@ -31,7 +31,7 @@ const sendRatingButton = (
       <br></br>
     </div>
   </>
-);
+); */
 
 /* let reservations = [
   {
@@ -133,6 +133,26 @@ function Reservation({ token }) {
     return sendGet();
   }
 
+  var review_res;
+  var review_stars;
+  var review_text;
+  const sendRatingButton = (
+    <>
+      <div id="sendRatingButton">
+        <button
+          id="ratingButton"
+          class="ratingButton"
+          onClick={() => {
+            sendReview(review_res, review_stars, review_text, token);
+          }}
+        >
+          Send Review
+        </button>
+        <br></br>
+      </div>
+    </>
+  );
+
   const saveButton = (
     <>
       <div id="saveButtonDiv" class="div-hidden">
@@ -209,9 +229,14 @@ function Reservation({ token }) {
           Write a review:
         </h2>
         <form>
-          <textarea class="textfield" id="reviewText" rows="3"></textarea>
-          {sendRatingButton}
+          <textarea
+            class="textfield"
+            id="reviewText"
+            rows="3"
+            onChange={(e) => (review_text = e.target.value)}
+          ></textarea>
         </form>
+        {sendRatingButton}
         <br></br>
       </div>
     </>
@@ -245,7 +270,7 @@ function Reservation({ token }) {
                 </td>
                 <td>
                   {[...Array(5)].map((star, indexStar) =>
-                    starRating(star, index, indexStar)
+                    starRating(star, index, indexStar, r)
                   )}
                 </td>
               </tr>
@@ -258,7 +283,7 @@ function Reservation({ token }) {
     </>
   );
 
-  function starRating(_star, index, indexStar) {
+  function starRating(_star, index, indexStar, res) {
     return (
       <span
         className="star"
@@ -273,6 +298,8 @@ function Reservation({ token }) {
               element.className = "star";
             }
           } else {
+            review_stars = indexStar + 1;
+            review_res = res;
             for (let i = 0; i < 5; i++) {
               var element = document.getElementById(index + "_" + i);
               element.className = "star-clicked";
@@ -514,6 +541,37 @@ function saveChanges(token, reservations, workspaces) {
   // add new reservations to database
   // todo: !
   sendSaveRequest(token, reservations, idResStart, lengths, workspaces);
+}
+
+function sendReview(res, stars, text, token) {
+  const review = {
+    workspace: res.seat_id,
+    reservation: res.res_id,
+    review: text,
+    star_rating: stars,
+  };
+  console.log(review);
+  const url = "http://localhost:8000/workspace/rating/add/";
+  const request = {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token.access}`,
+    },
+    mode: "cors",
+    body: JSON.stringify(review),
+  };
+  const sendGet = async () => {
+    const response = await fetch(url, request).catch((error) =>
+      console.error("There was an error!", error)
+    );
+    console.log(response);
+    if (response.status === 200 || response.status === 201) {
+      console.log("success");
+      return await response.json();
+    }
+  };
+  sendGet();
 }
 
 function sendSaveRequest(token, reservations, idResStart, lengths, workspaces) {
