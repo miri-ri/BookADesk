@@ -33,42 +33,42 @@ let reservations = [
     id: 1,
     user_id: 3,
     seat_id: "a",
-    start: "2022-07-14T12:00:00+02:00",
+    start: "2022-07-24T12:00:00+02:00",
     duration: 1,
   },
   {
     id: 2,
     user_id: 2,
     seat_id: "b",
-    start: "2022-07-15T08:00:00+02:00",
+    start: "2022-07-25T08:00:00+02:00",
     duration: 3,
   },
   {
     id: 3,
     user_id: 2,
     seat_id: "a",
-    start: "2022-07-15T14:00:00+02:00",
+    start: "2022-07-25T14:00:00+02:00",
     duration: 2,
   },
   {
     id: 4,
     user_id: 1,
     seat_id: "c",
-    start: "2022-07-16T11:00:00+02:00",
+    start: "2022-07-26T11:00:00+02:00",
     duration: 4,
   },
   {
     id: 5,
     user_id: 2,
     seat_id: "c",
-    start: "2022-07-16T11:00:00+02:00",
+    start: "2022-07-26T11:00:00+02:00",
     duration: 6,
   },
   {
     id: 6,
     user_id: 1,
     seat_id: "c",
-    start: "2022-07-17T12:00:00+02:00",
+    start: "2022-07-27T12:00:00+02:00",
     duration: 4,
   },
 ];
@@ -264,31 +264,17 @@ function Reservation({token}) {
   }
   var counter = 0;
 
-  var selectedGroup = null;
-  var showSeats;
-
-  var seats = (
-    <>
-      <tr id="seats-row" class="div-hidden">
-        <th scope="col" class="sidebar">
-          Seats:
-        </th>
-        {days &&
-          days.map(
-            (_day, i) =>
-              showSeats &&
-              showSeats.map((workspace, index) => (
-                <th
-                  class="cell-selected"
-                  id={i + "_seat_" + index}
-                >
-                  {workspace.name}
-                </th>
-              ))
-          )}
-      </tr>
-    </>
-  );
+  function seatsInGroup(groupname){
+    var showSeats = [];
+    for(let i = 0; i<workspaces1.length; i++){
+      if(workspaces1[i].group===groupname){
+        showSeats.push(workspaces1[i]);
+      }
+    }
+    changeCellWidth(workspaces1.length, groupname, showSeats.length)
+    return showSeats;
+  }
+  
 
   const table = (
     <>
@@ -314,15 +300,33 @@ function Reservation({token}) {
                   groups1.map((group, index) => (
                     <th
                       class="t-head"
-                      id={i + "_room_" + index}
-                      onClick={(_e) => buttonRoom(i, index)}//buttonRoom(i + "_room_" + index)}
+                      id={i + "_room_" + index}//buttonRoom(i + "_room_" + index)}
                     >
                       {group.name}
                     </th>
                   ))
               )}
           </tr>
-          {seats}
+          <tr id="seats-row" class="t-row">
+            <th scope="col" class="sidebar">
+              Seats:
+            </th>
+            {days &&
+              days.map(
+                (_day, i) =>
+                  groups1 &&
+                  groups1.map((group) => 
+                    seatsInGroup(group.name).map((seat) => (
+                      <th
+                        class="cell-selected"
+                        id={i + "_seat_" + 1}
+                      >
+                        {seat.name}
+                      </th>
+                    ))
+                  )
+              )}
+          </tr>
         </thead>
         <tbody>
           {times.map((time) => (
@@ -335,7 +339,17 @@ function Reservation({token}) {
                   (day) =>
                     groups1 &&
                     groups1.map((group) =>
-                      checkBooked(reservations, group.name, day, time)
+                      //checkBooked(reservations, group.name, day, time)
+                      seatsInGroup(group.name).map((seat) => /*(
+                        <th
+                          class="cell"
+                          id={1 + "_seat_" + 1}
+                        >
+                        </th>
+                      )*/
+                      
+                        checkBooked(reservations, group.name, day, time)
+                      )
                     )
                 )}
             </tr>
@@ -346,10 +360,9 @@ function Reservation({token}) {
     </>
   );
 
-  function buttonRoom(day, index) {
+  /*function buttonRoom(day, index) {
     const id = day + "_room_" + index;
     console.log(id);
-    selectedGroup=index;
     showSeats=workspaces1.filter(function (e) {
         console.log(groups1[selectedGroup].name)
         return e.group==groups1[selectedGroup].name;
@@ -374,18 +387,22 @@ function Reservation({token}) {
       selectedRoom = id;
       changeCellWidth(workspaces1.length);
     }
-  }
+  }*/
+  
 
-  function changeCellWidth(width) {
+  function changeCellWidth(widthDays, groupname, widthGroup) {
     for(let i = 0; i<amountShownDays; i++){
       var day = document.getElementById("day_"+i);
-      day.colSpan = width;
+      day.colSpan = widthDays;
       for(let k = 0; k<groups1.length; k++){
         var group = document.getElementById(i+"_room_"+k);
-        group.colSpan = width/groups1.length;
+        if(group!==null && groups1[k].name===groupname){
+          group.colSpan = widthGroup;
+        }
       }
     }
   }
+  
 
   return (
     <>
@@ -397,6 +414,9 @@ function Reservation({token}) {
     </>
   );
 }
+
+
+
 
 
 
@@ -418,7 +438,6 @@ function selectSlotToAdd(id) {
     selectedSlots_ID.push(id);
     button.className = "div";
   }
-  console.log("Selected Slots: " + selectedSlots_ID);
 }
 
 function editSlot(_workplace, _date, _time, id) {
@@ -427,6 +446,7 @@ function editSlot(_workplace, _date, _time, id) {
 }
 
 function saveChanges() {
+  console.log("Selected Slots: " + selectedSlots_ID);
 
   // ID strings are being sorted
   var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
@@ -435,7 +455,7 @@ function saveChanges() {
   // saving ID strings in int array slotsInt
   var slotsInt = selectedSlots_ID.map((e) => [
     parseInt(e.split("_")[0]),
-    parseInt(e.split("_")[1]),
+    e.split("_")[1],
     parseInt(e.split("_")[2]),
   ]);
 
@@ -494,7 +514,9 @@ function checkBooked(reservations, workplace, day, time) {
     <td id={id} class="cell" onClick={() => selectSlotToAdd(id)}></td>
   );
 
-  reservations.forEach((r) => {
+  console.log(id);
+
+  /*reservations.forEach((r) => {
     var classCellBooked = "cell-booked";
     if (r.user_id === testUserID) {
       classCellBooked = "cell-booked-user";
@@ -534,7 +556,7 @@ function checkBooked(reservations, workplace, day, time) {
         }
       }
     }
-  });
+  });*/
   return output;
 }
 
