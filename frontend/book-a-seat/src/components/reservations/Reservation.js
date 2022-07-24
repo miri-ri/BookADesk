@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./Reservation.css";
 
 const amountShownDays = 7;
-const testUserID = 2;
+var testUserID = 2;
 
 var selectedRoom = null;
 
@@ -83,6 +83,8 @@ let workspaces = [{name:"1"}, {name:"2"}, {name:"3"}, {name:"4"}, {name:"5"}, {n
 let groups = [{name:"a"}, {name:"b"}, {name:"c"}]; */
 
 function Reservation({ token }) {
+  testUserID = jwtDecode(token.access).username;
+
   function getWorkspaces() {
     console.log("get workplaces");
     const url = "http://localhost:8000/workspace/";
@@ -179,7 +181,9 @@ function Reservation({ token }) {
     const setInitialValuses = async () => {
       console.log("set initial values");
       setWorkspaces(await getWorkspaces());
-      setReservations(await getReservations());
+      const temp = await getReservations();
+      console.log(temp);
+      setReservations(temp);
       setGroups(await getGroups());
     };
     setInitialValuses();
@@ -523,13 +527,14 @@ function sendSaveRequest(token, reservations, idResStart, lengths, workspaces) {
       (workspace) => workspace.name === idResStart[i][1]
     );
     console.log(data);
+    console.log(new Date(startDate.toString()));
     const new_reservation = {
       id,
       res_id: id,
       username: jwtDecode(token.access).username,
       seat_id: idResStart[i][1],
       group_id: data ? data.group : "dummy", // TODO: brauchen wir die group id?
-      start: startDate,
+      start: startDate.toString(),
       duration: lengths[i],
       is_rated: false,
     };
@@ -578,7 +583,7 @@ function checkBooked(reservations, workplace, day, time) {
 
   reservations.forEach((r) => {
     var classCellBooked = "cell-booked";
-    if (r.user_id === testUserID) {
+    if (r.username === testUserID) {
       classCellBooked = "cell-booked-user";
     }
     var r_date = new Date(r.start);
@@ -628,7 +633,7 @@ function getDateFormat(date) {
 }
 
 function checkUser(res) {
-  return res.user_id === testUserID;
+  return res.username === testUserID;
 }
 
 export default Reservation;
