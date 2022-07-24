@@ -13,7 +13,7 @@
 	min-width:120px;
 }
 
-.cell, .cell-booked, .t-row, .t-head{       
+.cell, .cell-booked, .cell-selected, .t-row, .t-head{       
 	border: 2px solid #d3d3d3;
 }
 

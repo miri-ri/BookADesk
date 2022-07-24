@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "../ui-common/Button";
 import "../main/Main.css";
 
-function LoginForm({ toRegister, sendLoginRequest }) {
+function LoginForm({ toRegister, sendLoginRequest, toForgotPassword }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -38,6 +38,7 @@ function LoginForm({ toRegister, sendLoginRequest }) {
           onClick={() => sendLoginRequest({ username, password })}
         />
         <Button title="Register" onClick={toRegister} />
+        <Button title="Forgot Password" onClick={toForgotPassword} />
       </div>
     </>
   );

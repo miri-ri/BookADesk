@@ -49,6 +49,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
       comment: comment || "no comment",
       is_barrier_free: isBarrierFree,
       has_computer: hasComputer,
+      workspace_rating: 0.0,
     };
     console.log(newWorkspace);
     const request = {
@@ -117,8 +118,8 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
             <input
               className="form-check-input mt-3"
               type="checkbox"
-              value={isBarrierFree}
-              onChange={(e) => setIsBarrierFree(e.target.value)}
+              checked={isBarrierFree}
+              onChange={(e) => setIsBarrierFree(e.target.checked)}
             ></input>
           </div>
           <div class="form-check field p-0">
@@ -126,8 +127,8 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
             <input
               className="form-check-input mt-3"
               type="checkbox"
-              value={hasComputer}
-              onChange={(e) => setHasComputer(e.target.value)}
+              checked={hasComputer}
+              onChange={(e) => setHasComputer(e.target.checked)}
             ></input>
           </div>
           <div className="field pt-3">

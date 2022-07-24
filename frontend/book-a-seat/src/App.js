@@ -14,6 +14,7 @@ import EditForm from "./components/useraccount/EditForm";
 import CreateWorkspaceForm from "./components/workspace/CreateWorkspaceForm";
 import CreateGroupForm from "./components/workspace/CreateGroupForm";
 import jwt_decode from "jwt-decode";
+import ForgotPassword from "./components/useraccount/ForgotPassword";
 
 export const GlobalContext = createContext();
 
@@ -28,14 +29,20 @@ export const URLs = {
   createGroupURL: "/workspace/create-group",
   createWorkspaceURL: "/workspace/create-workspace",
   reservationURL: "/reservation",
+  forgotPasswordURL: "/user/forgotPassword",
 };
 
 function App() {
-  const [user, setUser] = useState(() =>
-    localStorage.getItem("token")
-      ? jwt_decode(localStorage.getItem("token"))
-      : null
-  );
+  const [user, setUser] = useState(() => {
+    const decodedTokenData = jwt_decode(localStorage.getItem("token"));
+    const user = {
+      username: decodedTokenData.username,
+      email: decodedTokenData.email,
+      id: decodedTokenData.user_id,
+    };
+    console.log(user);
+    return user;
+  });
   const [token, setToken] = useState(() =>
     JSON.parse(localStorage.getItem("token"))
   );
@@ -89,6 +96,10 @@ function App() {
     navigate("/reservation");
   };
 
+  const toForgotPassword = () => {
+    navigate(URLs.forgotPasswordURL);
+  };
+
   const login = ({ username, password }) => {
     const url = "http://localhost:8000/api/token/";
     const request = {
@@ -121,6 +132,7 @@ function App() {
           email: decodedTokenData.email,
           id: decodedTokenData.user_id,
         };
+        console.log(user);
         setUser(user);
         setToken(token);
         localStorage.setItem("token", JSON.stringify(token));
@@ -164,6 +176,50 @@ function App() {
     addUser();
   };
 
+  const resetPasswordRequest = (email) => {
+    return;
+    /*     const url = "http://localhost:8000/api/register/";
+    const request = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify(user),
+    };
+    const addUser = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      if (response.status === 201) {
+        toLogin();
+      }
+    };
+    addUser(); */
+  };
+
+  const setNewPasswordRequest = (email, otp, newPassword) => {
+    return;
+    /*     const url = "http://localhost:8000/api/register/";
+    const request = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify(user),
+    };
+    const addUser = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      if (response.status === 201) {
+        toLogin();
+      }
+    };
+    addUser(); */
+  };
+
   const addWorkspace = (data) => {
     console.log("create workspace", data);
   };
@@ -174,7 +230,11 @@ function App() {
 
   const welcomeElement = <Welcome toLogin={toLogin} />;
   const loginElement = (
-    <LoginForm toRegister={toRegister} sendLoginRequest={login} />
+    <LoginForm
+      toRegister={toRegister}
+      sendLoginRequest={login}
+      toForgotPassword={toForgotPassword}
+    />
   );
   const registerElement = (
     <RegisterForm toLogin={toLogin} sendRegisterRequest={register} />
@@ -199,7 +259,7 @@ function App() {
       token={token}
     />
   );
-  const reservationElement = <Reservation />;
+  const reservationElement = <Reservation token={token} />;
   const accountEditElement = (
     <EditForm
       user={user}
@@ -219,6 +279,13 @@ function App() {
       sendCreateRequest={addGroup}
       toWorkspace={toWorkspace}
       token={token}
+    />
+  );
+  const forgotPasswordElement = (
+    <ForgotPassword
+      toLogin={toLogin}
+      forgotPassword={resetPasswordRequest}
+      resetPassword={setNewPasswordRequest}
     />
   );
 
@@ -256,6 +323,10 @@ function App() {
             path={URLs.createGroupURL}
             element={createGroupElement}
             toWorkspace={toWorkspace}
+          />
+          <Route
+            path={URLs.forgotPasswordURL}
+            element={forgotPasswordElement}
           />
         </Routes>
         <Footer />
