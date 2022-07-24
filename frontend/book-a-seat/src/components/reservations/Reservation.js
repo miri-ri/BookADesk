@@ -462,7 +462,7 @@ function saveChanges(token) {
   // saving ID strings in int array slotsInt
   var slotsInt = selectedSlots_ID.map((e) => [
     parseInt(e.split("_")[0]),
-    parseInt(e.split("_")[1]),
+    e.split("_")[1],
     parseInt(e.split("_")[2]),
   ]);
 

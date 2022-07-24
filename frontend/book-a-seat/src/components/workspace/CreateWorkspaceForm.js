@@ -49,6 +49,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
       comment: comment || "no comment",
       is_barrier_free: isBarrierFree,
       has_computer: hasComputer,
+      workspace_rating: 0.0,
     };
     console.log(newWorkspace);
     const request = {
