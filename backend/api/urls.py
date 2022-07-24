@@ -10,6 +10,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('user/<int:pk>/', views.UserDetail.as_view(), name='user'),
-    path('meinereservierungen/', views.meinereservierungen, name='meinereservierungen'),
+    path('resetrequest/', views.reset_request, name='resetrequest'),
+    path('resetpassword/', views.reset_password, name='resetpassword'),
     path('', views.getRoutes)
 ]

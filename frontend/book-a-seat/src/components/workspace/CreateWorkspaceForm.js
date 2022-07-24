@@ -78,7 +78,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
   const setInitialValuses = async () => {
     setGroups(
       await getGroups().then((val) => {
-        setGroup(val[0].name);
+        setGroup(val[0] && val[0].name);
         return val;
       })
     );
@@ -117,8 +117,8 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
             <input
               className="form-check-input mt-3"
               type="checkbox"
-              value={isBarrierFree}
-              onChange={(e) => setIsBarrierFree(e.target.value)}
+              checked={isBarrierFree}
+              onChange={(e) => setIsBarrierFree(e.target.checked)}
             ></input>
           </div>
           <div class="form-check field p-0">
@@ -126,8 +126,8 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
             <input
               className="form-check-input mt-3"
               type="checkbox"
-              value={hasComputer}
-              onChange={(e) => setHasComputer(e.target.value)}
+              checked={hasComputer}
+              onChange={(e) => setHasComputer(e.target.checked)}
             ></input>
           </div>
           <div className="field pt-3">

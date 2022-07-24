@@ -77,81 +77,83 @@ let workspaces = [{name:"1"}, {name:"2"}, {name:"3"}, {name:"4"}, {name:"5"}, {n
 
 let groups = [{name:"a"}, {name:"b"}, {name:"c"}];
 
-function getWorkspaces() {
-  console.log("get workplaces");
-  const url = "http://localhost:8000/workspace/";
-  const request = {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-    },
-    mode: "cors",
+function Reservation({token}) {
+  function getWorkspaces() {
+    console.log("get workplaces");
+    const url = "http://localhost:8000/workspace/";
+    const request = {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token.access}`,
+      },
+      mode: "cors",
+    };
+    const sendGet = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendGet();
+  }
+  
+  function getReservations() {
+    console.log("get reservations");
+    const url = "http://localhost:8000/reservations/";
+    const request = {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token.access}`,
+      },
+      mode: "cors",
+    };
+    const sendGet = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendGet();
+  }
+  
+  const getGroups = () => {
+    console.log("get groups");
+    console.log(token);
+    const url = "http://localhost:8000/workspace/group";
+    const request = {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token.access}`,
+      },
+      mode: "cors",
+    };
+    const sendGet = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    return sendGet();
   };
-  const sendGet = async () => {
-    const response = await fetch(url, request).catch((error) =>
-      console.error("There was an error!", error)
-    );
-    console.log(response);
-    if (response.status === 200) {
-      console.log("success");
-      return await response.json();
-    }
-  };
-  return sendGet();
-}
 
-function getReservations() {
-  console.log("get reservations");
-  const url = "http://localhost:8000/reservations/";
-  const request = {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-    },
-    mode: "cors",
-  };
-  const sendGet = async () => {
-    const response = await fetch(url, request).catch((error) =>
-      console.error("There was an error!", error)
-    );
-    console.log(response);
-    if (response.status === 200) {
-      console.log("success");
-      return await response.json();
-    }
-  };
-  return sendGet();
-}
-
-function getGroups(){
-  console.log("get reservations");
-  const url = "http://localhost:8000/workspace/groups";
-  const request = {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-    },
-    mode: "cors",
-  };
-  const sendGet = async () => {
-    const response = await fetch(url, request).catch((error) =>
-      console.error("There was an error!", error)
-    );
-    console.log(response);
-    if (response.status === 200) {
-      console.log("success");
-      return await response.json();
-    }
-  };
-  return sendGet();
-}
-
-
-
-function Reservation() {
-  /*const [workspaces, setWorkspaces] = useState([]);
-  const [reservations, setReservations] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [workspaces1, setWorkspaces] = useState([]);
+  const [reservations1, setReservations] = useState([]);
+  const [groups1, setGroups] = useState([]);
 
   useEffect(() => {
     const setInitialValuses = async () => {
@@ -161,7 +163,7 @@ function Reservation() {
       setGroups(await getGroups());
     };
     setInitialValuses();
-  }, []);*/
+  }, []);
 
   var currentTime = new Date();
 
@@ -178,7 +180,8 @@ function Reservation() {
 
   const rating_form = (
     <>
-    <div className="reviewTextForm">
+    <div id="ratingFormDiv" className="div-hidden">
+        <h2 style={{marginTop:"2%", marginBottom:"-2%"}}>Write a review:</h2>
         <form>
         <textarea class="textfield" id="reviewText" rows="3"></textarea>
         {sendRatingButton}
@@ -227,19 +230,44 @@ function Reservation() {
     </>
   );
 
-  function starRating(star, index, indexStar){
+  function starRating(_star, index, indexStar){
     return (
-      <span className="star" id={r+"_"+indexStar} onClick={(e)=>{console.log(e)}}><i class="fa fa-star"></i> </span>
+      <span className="star" id={index+"_"+indexStar} onClick={(_e)=>{
+        if(document.getElementById(index+"_"+indexStar).className==="star-clicked"){
+          for(let i = 0; i<5; i++){
+            var element = document.getElementById(index+"_"+i)
+            element.className="star"
+          }
+        } else {
+          for(let i = 0; i<5; i++){
+            var element = document.getElementById(index+"_"+i)
+            element.className="star-clicked"
+            if(i>indexStar){
+              element.className="star"
+            }
+          }
+          var counter = 0;
+          while(document.getElementById(counter+"_"+0)!=null){
+            if(counter!=index){
+              for(let i = 0; i<5; i++){
+                var element = document.getElementById(counter+"_"+i)
+                element.className="star"
+              }
+            }
+            counter++;
+          }
+          var reviewForm = document.getElementById("ratingFormDiv");
+          reviewForm.className = "rewieTextForm"
+        }
+      }}><i class="fa fa-star"></i> </span>
     )
   }
-
   var counter = 0;
 
-  var col = groups.length;
+  var selectedGroup = null;
+  var showSeats;
 
-  var selectedRoom = 0;
-
-  const seats = (
+  var seats = (
     <>
       <tr id="seats-row" class="div-hidden">
         <th scope="col" class="sidebar">
@@ -247,9 +275,9 @@ function Reservation() {
         </th>
         {days &&
           days.map(
-            (day, i) =>
-              workspaces &&
-              workspaces.map((workspace, index) => (
+            (_day, i) =>
+              showSeats &&
+              showSeats.map((workspace, index) => (
                 <th
                   class="cell-selected"
                   id={i + "_seat_" + index}
@@ -270,7 +298,7 @@ function Reservation() {
             <th scope="col" class="sidebar"></th>
             {days &&
               days.map((e, index) => (
-                <th id={"day_" + index} class="t-head" colSpan={col}>
+                <th id={"day_" + index} class="t-head" colSpan={groups1.length}>
                   {e}
                 </th>
               ))}
@@ -281,13 +309,13 @@ function Reservation() {
             </th>
             {days &&
               days.map(
-                (day, i) =>
-                  groups &&
-                  groups.map((group, index) => (
+                (_day, i) =>
+                  groups1 &&
+                  groups1.map((group, index) => (
                     <th
                       class="t-head"
                       id={i + "_room_" + index}
-                      onClick={(e) => buttonRoom(i + "_room_" + index)}
+                      onClick={(_e) => buttonRoom(i, index)}//buttonRoom(i + "_room_" + index)}
                     >
                       {group.name}
                     </th>
@@ -305,8 +333,8 @@ function Reservation() {
               {days &&
                 days.map(
                   (day) =>
-                    groups &&
-                    groups.map((group) =>
+                    groups1 &&
+                    groups1.map((group) =>
                       checkBooked(reservations, group.name, day, time)
                     )
                 )}
@@ -317,6 +345,47 @@ function Reservation() {
       {saveButton}
     </>
   );
+
+  function buttonRoom(day, index) {
+    const id = day + "_room_" + index;
+    console.log(id);
+    selectedGroup=index;
+    showSeats=workspaces1.filter(function (e) {
+        console.log(groups1[selectedGroup].name)
+        return e.group==groups1[selectedGroup].name;
+    })
+    console.log(showSeats)
+    var element = document.getElementById(id);
+    var row = document.getElementById("seats-row");
+    if (element.className === "cell-selected" && selectedRoom==id) {
+      for(let i=0; i<amountShownDays; i++){
+        var element = document.getElementById(i + "_room_" + index);
+        element.className = "t-head";
+      }
+      row.className = "div-hidden";
+      selectedRoom = null;
+      changeCellWidth(groups1.length);
+    } else if (selectedRoom==null){
+      for(let i=0; i<amountShownDays; i++){
+        var element = document.getElementById(i + "_room_" + index);
+        element.className = "cell-selected";
+      }
+      row.className = "t-row";
+      selectedRoom = id;
+      changeCellWidth(workspaces1.length);
+    }
+  }
+
+  function changeCellWidth(width) {
+    for(let i = 0; i<amountShownDays; i++){
+      var day = document.getElementById("day_"+i);
+      day.colSpan = width;
+      for(let k = 0; k<groups1.length; k++){
+        var group = document.getElementById(i+"_room_"+k);
+        group.colSpan = width/groups1.length;
+      }
+    }
+  }
 
   return (
     <>
@@ -329,33 +398,9 @@ function Reservation() {
   );
 }
 
-function buttonRoom(id) {
-  console.log(id);
-  var element = document.getElementById(id);
-  var row = document.getElementById("seats-row");
-  if (element.className === "cell-selected" && selectedRoom==id) {
-    element.className = "t-head";
-    row.className = "div-hidden";
-    selectedRoom = null;
-    changeCellWidth(groups.length);
-  } else if (selectedRoom==null){
-    element.className = "cell-selected";
-    row.className = "t-row";
-    selectedRoom = id;
-    changeCellWidth(6); //todo: zugehörige Workspaces pro Gruppe auslesen
-  }
-}
 
-function changeCellWidth(width) {
-  for(let i = 0; i<amountShownDays; i++){
-    var day = document.getElementById("day_"+i);
-    day.colSpan = width;
-    for(let k = 0; k<3; k++){
-      var group = document.getElementById(i+"_room_"+k);
-      group.colSpan = width/3;
-    }
-  }
-}
+
+
 
 var selectedSlots_ID = [];
 
@@ -376,72 +421,58 @@ function selectSlotToAdd(id) {
   console.log("Selected Slots: " + selectedSlots_ID);
 }
 
-function editSlot(workplace, date, time, id) {
+function editSlot(_workplace, _date, _time, id) {
   var e = document.getElementById(id);
   e.className = "cell-selected";
 }
 
 function saveChanges() {
-  /*var cutWorkplace = selectedSlots_ID.map(id => (id.split('_')[0] +"_"+ id.split('_')[1]))
-  var findDuplicates = cutWorkplace => cutWorkplace.filter((item, index) => cutWorkplace.indexOf(item) !== index)
-  var c = 0;
-  var duplicats = [];
-  selectedSlots_ID.map(id => findDuplicates(cutWorkplace).filter(d => d===id.split('_')[0] +"_"+ id.split('_')[1])).map(item => {
-    if(item.length!=0){
-      item = selectedSlots_ID[c]
-      duplicats.push(item)
-    }
-    c++;
-  })
-  var resWithoutDuplicats = selectedSlots_ID
-  console.log(duplicats)*/
 
+  // ID strings are being sorted
+  var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+  selectedSlots_ID.sort(collator.compare);
+
+  // saving ID strings in int array slotsInt
   var slotsInt = selectedSlots_ID.map((e) => [
     parseInt(e.split("_")[0]),
     parseInt(e.split("_")[1]),
     parseInt(e.split("_")[2]),
   ]);
-  var duplicates = slotsInt.map((i) => {
-    var later = [i[0], i[1], i[2] + 1];
-    if (
-      slotsInt.filter(
-        (f) => later[0] == f[0] && later[1] == f[1] && later[2] == f[2]
-      ).length != 0
-    ) {
-      console.log("earlier(i): " + i + ", later: " + later);
-      return i;
-    }
-  });
-  console.log(slotsInt);
-  console.log(duplicates);
-  // for loop über alle slots, counter für einen slot (auf platz 0 und 1), add to array[id, duration]
-  var reservations = [];
-  slotsInt.map((e) => {
-    var duration = 1;
-    for (let i = 0; i < duplicates.length; i++) {
-      if (
-        duplicates[i] != undefined &&
-        e[0] == duplicates[i][0] &&
-        e[1] == duplicates[i][1]
-      ) {
-        duplicates[i] = undefined;
-        duration++;
-      }
-    }
-    reservations.push([e, duration]);
-  });
-  console.log(reservations);
-  var fil = reservations.filter((a) => a[1] != 1);
-  console.log(fil);
 
-  // einzelne Slots werden zu längeren hinzugefügt
-  // ursprüngliche Liste wird durchgegangen, wenn element[0 und 1] gleich und [2]>=res[2] und [2]<res[2]+duration
-  var allRes = slotsInt.map((e) => {
-    if (e[0]) {
+  // removing all slots that arent the starting time
+  var idResStart = []
+  slotsInt.map(e => {
+    var before = e[0] + "_" + e[1] + "_" + (e[2]-1)
+    if(selectedSlots_ID.filter(str => {
+      if(str.indexOf(before) !== -1) {
+        return true;
+      }
+    }).length===0){
+      idResStart.push(e)
     }
-  });
-  // remove duplicates from slots
-  // add other slots as duration 1 (for loop oder map mit push funktion)
+  })
+
+  // figuring out the duration of the reservations
+  var lengths = []
+  idResStart.map(e => {
+    var counter = 1;
+    while(slotsInt.some(element => {
+      if (element[0] === e[0] && element[1] === e[1] && element[2] === e[2]+counter) {
+        return true;
+      }
+      return false;
+    })){
+      counter++;
+    }
+    lengths.push(counter)
+  })
+
+  console.log("idResStart")
+  console.log(idResStart);
+  console.log("lengths " + lengths)
+
+  // add new reservations to database
+  // todo: !
 }
 
 var diffDays = 0;
