@@ -136,7 +136,7 @@ function Reservation({ token }) {
         <button
           id="saveButton"
           class="saveButton"
-          onClick={() => saveChanges(token)}
+          onClick={() => saveChanges(token, reservations)}
         >
           Save Changes
         </button>
@@ -451,7 +451,7 @@ function editSlot(_workplace, _date, _time, id) {
   e.className = "cell-selected";
 }
 
-function saveChanges(token) {
+function saveChanges(token, reservations) {
   // ID strings are being sorted
   var collator = new Intl.Collator(undefined, {
     numeric: true,
@@ -508,12 +508,20 @@ function saveChanges(token) {
 
   // add new reservations to database
   // todo: !
-  sendSaveRequest(token);
+  sendSaveRequest(token, reservations);
 }
 
-function sendSaveRequest(token) {
+function sendSaveRequest(token, reservations) {
+  const reservations_to_push = [];
+  for (let i; i < idResStart.length; i++) {
+    reservations_to_push.push({
+      res_id: reservations ? reservations.length : 0,
+      user_id: 1,
+    });
+  }
+
   console.log("send save");
-  const reservations = {
+  /*   const reservations = {
     id: 1,
     res_id: "1",
     user_id: 1,
@@ -522,7 +530,9 @@ function sendSaveRequest(token) {
     start: "2000-01-01",
     duration: 4,
     slot: "1",
-  };
+    is_a_group: false,
+    is_rated: false,
+  }; */
   const url = "http://localhost:8000/reservations/";
   const request = {
     method: "POST",
