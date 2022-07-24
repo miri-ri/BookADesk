@@ -137,7 +137,7 @@ function Reservation({ token }) {
         <button
           id="saveButton"
           class="saveButton"
-          onClick={() => saveChanges(token, reservations)}
+          onClick={() => saveChanges(token, reservations, workspaces1)}
         >
           Save Changes
         </button>
@@ -452,7 +452,7 @@ function editSlot(_workplace, _date, _time, id) {
   e.className = "cell-selected";
 }
 
-function saveChanges(token, reservations) {
+function saveChanges(token, reservations, workspaces) {
   // ID strings are being sorted
   var collator = new Intl.Collator(undefined, {
     numeric: true,
@@ -509,24 +509,27 @@ function saveChanges(token, reservations) {
 
   // add new reservations to database
   // todo: !
-  sendSaveRequest(token, reservations, idResStart, lengths);
+  sendSaveRequest(token, reservations, idResStart, lengths, workspaces);
 }
 
-function sendSaveRequest(token, reservations, idResStart, lengths) {
-  console.log(idResStart);
-  console.log(lengths);
+function sendSaveRequest(token, reservations, idResStart, lengths, workspaces) {
   const url = "http://localhost:8000/reservations/";
   for (let i = 0; i < idResStart.length; i++) {
-    console.log(idResStart[i][1]);
     let id = (reservations ? reservations.length + i : 0 + i).toString();
-    let startDate = new Date(); // TODO: richtiges start datum erstellen
+    var startDate = new Date();
+    startDate.setDate(startDate.getDate() + idResStart[i][0]);
+    startDate.setHours(idResStart[i][2], 0, 0);
+    var data = workspaces.find(
+      (workspace) => workspace.name === idResStart[i][1]
+    );
+    console.log(data);
     const new_reservation = {
       id,
       res_id: id,
       username: jwtDecode(token.access).username,
       seat_id: idResStart[i][1],
-      group_id: "dummy",  // TODO: brauchen wir die group id?
-      start: "2000-01-01",
+      group_id: data ? data.group : "dummy", // TODO: brauchen wir die group id?
+      start: startDate,
       duration: lengths[i],
       is_rated: false,
     };
