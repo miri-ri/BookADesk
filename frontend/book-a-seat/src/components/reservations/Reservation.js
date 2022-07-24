@@ -241,6 +241,9 @@ function Reservation({ token }) {
       </div>
     </>
   );
+
+  console.log("Reservations:")
+  console.log(reservations);
   const r = reservations.filter(checkUser);
 
   const myReservations = (
@@ -328,28 +331,17 @@ function Reservation({ token }) {
   }
   var counter = 0;
 
-  var selectedGroup = null;
-  var showSeats;
-
-  var seats = (
-    <>
-      <tr id="seats-row" class="div-hidden">
-        <th scope="col" class="sidebar">
-          Seats:
-        </th>
-        {days &&
-          days.map(
-            (_day, i) =>
-              showSeats &&
-              showSeats.map((workspace, index) => (
-                <th class="cell-selected" id={i + "_seat_" + index}>
-                  {workspace.name}
-                </th>
-              ))
-          )}
-      </tr>
-    </>
-  );
+  function seatsInGroup(groupname){
+    var showSeats = [];
+    for(let i = 0; i<workspaces1.length; i++){
+      if(workspaces1[i].group===groupname){
+        showSeats.push(workspaces1[i]);
+      }
+    }
+    changeCellWidth(workspaces1.length, groupname, showSeats.length)
+    return showSeats;
+  }
+  
 
   const table = (
     <>
@@ -376,14 +368,32 @@ function Reservation({ token }) {
                     <th
                       class="t-head"
                       id={i + "_room_" + index}
-                      onClick={(_e) => buttonRoom(i, index)} //buttonRoom(i + "_room_" + index)}
                     >
                       {group.name}
                     </th>
                   ))
               )}
           </tr>
-          {seats}
+          <tr id="seats-row" class="t-row">
+            <th scope="col" class="sidebar">
+              Seats:
+            </th>
+            {days &&
+              days.map(
+                (_day, i) =>
+                  groups1 &&
+                  groups1.map((group) => 
+                    seatsInGroup(group.name).map((seat) => (
+                      <th
+                        class="cell-selected"
+                        id={i + "_seat_" + 1}
+                      >
+                        {seat.name}
+                      </th>
+                    ))
+                  )
+              )}
+          </tr>
         </thead>
         <tbody>
           {times.map((time) => (
@@ -396,10 +406,12 @@ function Reservation({ token }) {
                   (day) =>
                     groups1 &&
                     groups1.map((group) =>
-                      checkBooked(reservations, group.name, day, time)
+                      seatsInGroup(group.name).map((seat) => 
+                        checkBooked(reservations, seat.name, day, time)
                     )
-                )}
-            </tr>
+                  )
+              )}
+          </tr>
           ))}
         </tbody>
       </table>
@@ -407,7 +419,7 @@ function Reservation({ token }) {
     </>
   );
 
-  function buttonRoom(day, index) {
+  /*function buttonRoom(day, index) {
     const id = day + "_room_" + index;
     console.log(id);
     selectedGroup = index;
@@ -435,15 +447,17 @@ function Reservation({ token }) {
       selectedRoom = id;
       changeCellWidth(workspaces1.length);
     }
-  }
+  }*/
 
-  function changeCellWidth(width) {
-    for (let i = 0; i < amountShownDays; i++) {
-      var day = document.getElementById("day_" + i);
-      day.colSpan = width;
-      for (let k = 0; k < groups1.length; k++) {
-        var group = document.getElementById(i + "_room_" + k);
-        group.colSpan = width / groups1.length;
+  function changeCellWidth(widthDays, groupname, widthGroup) {
+    for(let i = 0; i<amountShownDays; i++){
+      var day = document.getElementById("day_"+i);
+      day.colSpan = widthDays;
+      for(let k = 0; k<groups1.length; k++){
+        var group = document.getElementById(i+"_room_"+k);
+        if(group!==null && groups1[k].name===groupname){
+          group.colSpan = widthGroup;
+        }
       }
     }
   }
@@ -470,12 +484,11 @@ function selectSlotToAdd(id) {
     if (selectedSlots_ID.length === 0) {
       button.className = "div-hidden";
     }
-  } else {
+  } else if(e.className === "cell"){
     e.className = "cell-selected";
     selectedSlots_ID.push(id);
     button.className = "div";
   }
-  console.log("Selected Slots: " + selectedSlots_ID);
 }
 
 function editSlot(_workplace, _date, _time, id) {
@@ -484,6 +497,8 @@ function editSlot(_workplace, _date, _time, id) {
 }
 
 function saveChanges(token, reservations, workspaces) {
+  console.log("Selected Slots: " + selectedSlots_ID);
+
   // ID strings are being sorted
   var collator = new Intl.Collator(undefined, {
     numeric: true,
@@ -539,7 +554,6 @@ function saveChanges(token, reservations, workspaces) {
   console.log("lengths " + lengths);
 
   // add new reservations to database
-  // todo: !
   sendSaveRequest(token, reservations, idResStart, lengths, workspaces);
 }
 
@@ -680,6 +694,7 @@ function checkBooked(reservations, workplace, day, time) {
       }
     }
   });
+  console.log(testUserID);
   return output;
 }
 
