@@ -130,7 +130,10 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   }, []);
 
   const addWorkspaceButtonElement = (
-    <Button title="Create Workspace" onClick={() => groups.length > 0 && toCreateWorkspace()} />
+    <Button
+      title="Create Workspace"
+      onClick={() => groups.length > 0 && toCreateWorkspace()}
+    />
   );
   const addGroupButtonElement = (
     <Button title="Create Group" onClick={toCreateGroup} />
@@ -146,18 +149,28 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
             <th scope="col">Comment</th>
             <th scope="col">Is Barrier Free</th>
             <th scope="col">Has Computer</th>
+            <th scope="col">Rating</th>
           </tr>
         </thead>
         <tbody>
           {workspaces &&
             workspaces.map(
-              ({ id, name, comment, is_barrier_free, has_computer, group }) => (
+              ({
+                id,
+                name,
+                comment,
+                is_barrier_free,
+                has_computer,
+                group,
+                workspace_rating,
+              }) => (
                 <tr>
                   <td>{name}</td>
                   <td>{group}</td>
                   <td>{comment}</td>
                   <td>{is_barrier_free ? "Yes" : "No"}</td>
                   <td>{has_computer ? "Yes" : "No"}</td>
+                  <td>{workspace_rating}</td>
                   <td>
                     <Button
                       onClick={() => {

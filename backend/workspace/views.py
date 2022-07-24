@@ -15,13 +15,13 @@ from django.contrib.admin.views.decorators import staff_member_required
 @api_view(['GET'])
 #@permission_classes([IsAuthenticated])
 def workspace_list(request):
-    workspace = Workspace.objects.all()
-    for ws in workspace:
-        if  Rating.objects.filter(workspace=ws.id).count()>0:
-            stars = Rating.objects.filter(workspace=ws.id).aggregate(Avg('star_rating'))
+    all_workspaces = Workspace.objects.all()
+    for ws in all_workspaces:
+        if  Rating.objects.filter(workspace=ws.name).count()>0:
+            stars = Rating.objects.filter(workspace=ws.name).aggregate(Avg('star_rating'))
             ws.workspace_rating = stars.get('star_rating__avg')
             ws.save(update_fields=['workspace_rating'])  
-    serializer = WorkspaceSerializer(workspace, many=True)
+    serializer = WorkspaceSerializer(all_workspaces, many=True)
     return Response(serializer.data)
 
 
