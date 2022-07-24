@@ -512,13 +512,13 @@ function saveChanges(token, reservations) {
 }
 
 function sendSaveRequest(token, reservations) {
-  const reservations_to_push = [];
+/*   const reservations_to_push = [];
   for (let i; i < idResStart.length; i++) {
     reservations_to_push.push({
       res_id: reservations ? reservations.length : 0,
       user_id: 1,
     });
-  }
+  } */
 
   console.log("send save");
   /*   const reservations = {
