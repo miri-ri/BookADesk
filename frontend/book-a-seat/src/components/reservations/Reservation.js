@@ -32,42 +32,42 @@ let reservations = [
   {
     id: 1,
     user_id: 3,
-    seat_id: "a",
+    seat_id: "A",
     start: "2022-07-24T12:00:00+02:00",
     duration: 1,
   },
   {
     id: 2,
     user_id: 2,
-    seat_id: "b",
+    seat_id: "B",
     start: "2022-07-25T08:00:00+02:00",
     duration: 3,
   },
   {
     id: 3,
     user_id: 2,
-    seat_id: "a",
+    seat_id: "C",
     start: "2022-07-25T14:00:00+02:00",
     duration: 2,
   },
   {
     id: 4,
     user_id: 1,
-    seat_id: "c",
+    seat_id: "C",
     start: "2022-07-26T11:00:00+02:00",
     duration: 4,
   },
   {
     id: 5,
     user_id: 2,
-    seat_id: "c",
+    seat_id: "C",
     start: "2022-07-26T11:00:00+02:00",
     duration: 6,
   },
   {
     id: 6,
     user_id: 1,
-    seat_id: "c",
+    seat_id: "C",
     start: "2022-07-27T12:00:00+02:00",
     duration: 4,
   },
@@ -78,6 +78,7 @@ let workspaces = [{name:"1"}, {name:"2"}, {name:"3"}, {name:"4"}, {name:"5"}, {n
 let groups = [{name:"a"}, {name:"b"}, {name:"c"}];
 
 function Reservation({token}) {
+  console.log(groups1)
   function getWorkspaces() {
     console.log("get workplaces");
     const url = "http://localhost:8000/workspace/";
@@ -257,7 +258,7 @@ function Reservation({token}) {
             counter++;
           }
           var reviewForm = document.getElementById("ratingFormDiv");
-          reviewForm.className = "rewieTextForm"
+          reviewForm.className = "reviewTextForm"
         }
       }}><i class="fa fa-star"></i> </span>
     )
@@ -347,8 +348,7 @@ function Reservation({token}) {
                         >
                         </th>
                       )*/
-                      
-                        checkBooked(reservations, group.name, day, time)
+                      checkBooked(reservations, seat.name, day, time)
                       )
                     )
                 )}
@@ -516,7 +516,7 @@ function checkBooked(reservations, workplace, day, time) {
 
   console.log(id);
 
-  /*reservations.forEach((r) => {
+  reservations.forEach((r) => {
     var classCellBooked = "cell-booked";
     if (r.user_id === testUserID) {
       classCellBooked = "cell-booked-user";
@@ -556,7 +556,7 @@ function checkBooked(reservations, workplace, day, time) {
         }
       }
     }
-  });*/
+  });
   return output;
 }
 
