@@ -6,7 +6,7 @@ const testUserID = 2;
 
 var selectedRoom = null;
 
-const saveButton = (
+/* const saveButton = (
   <>
     <div id="saveButtonDiv" class="div-hidden">
       <button id="saveButton" class="saveButton" onClick={saveChanges}>
@@ -15,12 +15,16 @@ const saveButton = (
       <br></br>
     </div>
   </>
-);
+); */
 
 const sendRatingButton = (
   <>
     <div id="sendRatingButton">
-      <button id="ratingButton" class="ratingButton" onClick={console.log("save")}>
+      <button
+        id="ratingButton"
+        class="ratingButton"
+        onClick={console.log("save")}
+      >
         Send Review
       </button>
       <br></br>
@@ -28,7 +32,7 @@ const sendRatingButton = (
   </>
 );
 
-let reservations = [
+/* let reservations = [
   {
     id: 1,
     user_id: 3,
@@ -75,9 +79,9 @@ let reservations = [
 
 let workspaces = [{name:"1"}, {name:"2"}, {name:"3"}, {name:"4"}, {name:"5"}, {name:"6"}];
 
-let groups = [{name:"a"}, {name:"b"}, {name:"c"}];
+let groups = [{name:"a"}, {name:"b"}, {name:"c"}]; */
 
-function Reservation({token}) {
+function Reservation({ token }) {
   function getWorkspaces() {
     console.log("get workplaces");
     const url = "http://localhost:8000/workspace/";
@@ -101,7 +105,7 @@ function Reservation({token}) {
     };
     return sendGet();
   }
-  
+
   function getReservations() {
     console.log("get reservations");
     const url = "http://localhost:8000/reservations/";
@@ -125,7 +129,22 @@ function Reservation({token}) {
     };
     return sendGet();
   }
-  
+
+  const saveButton = (
+    <>
+      <div id="saveButtonDiv" class="div-hidden">
+        <button
+          id="saveButton"
+          class="saveButton"
+          onClick={() => saveChanges(token)}
+        >
+          Save Changes
+        </button>
+        <br></br>
+      </div>
+    </>
+  );
+
   const getGroups = () => {
     console.log("get groups");
     console.log(token);
@@ -152,7 +171,7 @@ function Reservation({token}) {
   };
 
   const [workspaces1, setWorkspaces] = useState([]);
-  const [reservations1, setReservations] = useState([]);
+  const [reservations, setReservations] = useState([]);
   const [groups1, setGroups] = useState([]);
 
   useEffect(() => {
@@ -180,16 +199,18 @@ function Reservation({token}) {
 
   const rating_form = (
     <>
-    <div id="ratingFormDiv" className="div-hidden">
-        <h2 style={{marginTop:"2%", marginBottom:"-2%"}}>Write a review:</h2>
+      <div id="ratingFormDiv" className="div-hidden">
+        <h2 style={{ marginTop: "2%", marginBottom: "-2%" }}>
+          Write a review:
+        </h2>
         <form>
-        <textarea class="textfield" id="reviewText" rows="3"></textarea>
-        {sendRatingButton}
+          <textarea class="textfield" id="reviewText" rows="3"></textarea>
+          {sendRatingButton}
         </form>
         <br></br>
       </div>
     </>
-  )
+  );
   const r = reservations.filter(checkUser);
 
   const myReservations = (
@@ -208,19 +229,21 @@ function Reservation({token}) {
         <tbody>
           {r.map((r, index) => (
             <>
-            <tr>
-              <td>{r.seat_id}</td>
-              <td>{getDateFormat(new Date(r.start))}</td>
-              <td>
-                {new Date(r.start).getHours() +
-                  ":00 - " +
-                  (new Date(r.start).getHours() + r.duration) +
-                  ":00"}
-              </td>
-              <td>
-                {[...Array(5)].map((star, indexStar) => starRating(star, index, indexStar))}
-              </td>
-            </tr>
+              <tr>
+                <td>{r.seat_id}</td>
+                <td>{getDateFormat(new Date(r.start))}</td>
+                <td>
+                  {new Date(r.start).getHours() +
+                    ":00 - " +
+                    (new Date(r.start).getHours() + r.duration) +
+                    ":00"}
+                </td>
+                <td>
+                  {[...Array(5)].map((star, indexStar) =>
+                    starRating(star, index, indexStar)
+                  )}
+                </td>
+              </tr>
             </>
           ))}
         </tbody>
@@ -230,37 +253,46 @@ function Reservation({token}) {
     </>
   );
 
-  function starRating(_star, index, indexStar){
+  function starRating(_star, index, indexStar) {
     return (
-      <span className="star" id={index+"_"+indexStar} onClick={(_e)=>{
-        if(document.getElementById(index+"_"+indexStar).className==="star-clicked"){
-          for(let i = 0; i<5; i++){
-            var element = document.getElementById(index+"_"+i)
-            element.className="star"
-          }
-        } else {
-          for(let i = 0; i<5; i++){
-            var element = document.getElementById(index+"_"+i)
-            element.className="star-clicked"
-            if(i>indexStar){
-              element.className="star"
+      <span
+        className="star"
+        id={index + "_" + indexStar}
+        onClick={(_e) => {
+          if (
+            document.getElementById(index + "_" + indexStar).className ===
+            "star-clicked"
+          ) {
+            for (let i = 0; i < 5; i++) {
+              var element = document.getElementById(index + "_" + i);
+              element.className = "star";
             }
-          }
-          var counter = 0;
-          while(document.getElementById(counter+"_"+0)!=null){
-            if(counter!=index){
-              for(let i = 0; i<5; i++){
-                var element = document.getElementById(counter+"_"+i)
-                element.className="star"
+          } else {
+            for (let i = 0; i < 5; i++) {
+              var element = document.getElementById(index + "_" + i);
+              element.className = "star-clicked";
+              if (i > indexStar) {
+                element.className = "star";
               }
             }
-            counter++;
+            var counter = 0;
+            while (document.getElementById(counter + "_" + 0) != null) {
+              if (counter != index) {
+                for (let i = 0; i < 5; i++) {
+                  var element = document.getElementById(counter + "_" + i);
+                  element.className = "star";
+                }
+              }
+              counter++;
+            }
+            var reviewForm = document.getElementById("ratingFormDiv");
+            reviewForm.className = "rewieTextForm";
           }
-          var reviewForm = document.getElementById("ratingFormDiv");
-          reviewForm.className = "rewieTextForm"
-        }
-      }}><i class="fa fa-star"></i> </span>
-    )
+        }}
+      >
+        <i class="fa fa-star"></i>{" "}
+      </span>
+    );
   }
   var counter = 0;
 
@@ -278,10 +310,7 @@ function Reservation({token}) {
             (_day, i) =>
               showSeats &&
               showSeats.map((workspace, index) => (
-                <th
-                  class="cell-selected"
-                  id={i + "_seat_" + index}
-                >
+                <th class="cell-selected" id={i + "_seat_" + index}>
                   {workspace.name}
                 </th>
               ))
@@ -315,7 +344,7 @@ function Reservation({token}) {
                     <th
                       class="t-head"
                       id={i + "_room_" + index}
-                      onClick={(_e) => buttonRoom(i, index)}//buttonRoom(i + "_room_" + index)}
+                      onClick={(_e) => buttonRoom(i, index)} //buttonRoom(i + "_room_" + index)}
                     >
                       {group.name}
                     </th>
@@ -349,24 +378,24 @@ function Reservation({token}) {
   function buttonRoom(day, index) {
     const id = day + "_room_" + index;
     console.log(id);
-    selectedGroup=index;
-    showSeats=workspaces1.filter(function (e) {
-        console.log(groups1[selectedGroup].name)
-        return e.group==groups1[selectedGroup].name;
-    })
-    console.log(showSeats)
+    selectedGroup = index;
+    showSeats = workspaces1.filter(function(e) {
+      console.log(groups1[selectedGroup].name);
+      return e.group == groups1[selectedGroup].name;
+    });
+    console.log(showSeats);
     var element = document.getElementById(id);
     var row = document.getElementById("seats-row");
-    if (element.className === "cell-selected" && selectedRoom==id) {
-      for(let i=0; i<amountShownDays; i++){
+    if (element.className === "cell-selected" && selectedRoom == id) {
+      for (let i = 0; i < amountShownDays; i++) {
         var element = document.getElementById(i + "_room_" + index);
         element.className = "t-head";
       }
       row.className = "div-hidden";
       selectedRoom = null;
       changeCellWidth(groups1.length);
-    } else if (selectedRoom==null){
-      for(let i=0; i<amountShownDays; i++){
+    } else if (selectedRoom == null) {
+      for (let i = 0; i < amountShownDays; i++) {
         var element = document.getElementById(i + "_room_" + index);
         element.className = "cell-selected";
       }
@@ -377,12 +406,12 @@ function Reservation({token}) {
   }
 
   function changeCellWidth(width) {
-    for(let i = 0; i<amountShownDays; i++){
-      var day = document.getElementById("day_"+i);
+    for (let i = 0; i < amountShownDays; i++) {
+      var day = document.getElementById("day_" + i);
       day.colSpan = width;
-      for(let k = 0; k<groups1.length; k++){
-        var group = document.getElementById(i+"_room_"+k);
-        group.colSpan = width/groups1.length;
+      for (let k = 0; k < groups1.length; k++) {
+        var group = document.getElementById(i + "_room_" + k);
+        group.colSpan = width / groups1.length;
       }
     }
   }
@@ -397,10 +426,6 @@ function Reservation({token}) {
     </>
   );
 }
-
-
-
-
 
 var selectedSlots_ID = [];
 
@@ -426,10 +451,12 @@ function editSlot(_workplace, _date, _time, id) {
   e.className = "cell-selected";
 }
 
-function saveChanges() {
-
+function saveChanges(token) {
   // ID strings are being sorted
-  var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+  var collator = new Intl.Collator(undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
   selectedSlots_ID.sort(collator.compare);
 
   // saving ID strings in int array slotsInt
@@ -440,39 +467,83 @@ function saveChanges() {
   ]);
 
   // removing all slots that arent the starting time
-  var idResStart = []
-  slotsInt.map(e => {
-    var before = e[0] + "_" + e[1] + "_" + (e[2]-1)
-    if(selectedSlots_ID.filter(str => {
-      if(str.indexOf(before) !== -1) {
-        return true;
-      }
-    }).length===0){
-      idResStart.push(e)
+  var idResStart = [];
+  slotsInt.map((e) => {
+    var before = e[0] + "_" + e[1] + "_" + (e[2] - 1);
+    if (
+      selectedSlots_ID.filter((str) => {
+        if (str.indexOf(before) !== -1) {
+          return true;
+        }
+      }).length === 0
+    ) {
+      idResStart.push(e);
     }
-  })
+  });
 
   // figuring out the duration of the reservations
-  var lengths = []
-  idResStart.map(e => {
+  var lengths = [];
+  idResStart.map((e) => {
     var counter = 1;
-    while(slotsInt.some(element => {
-      if (element[0] === e[0] && element[1] === e[1] && element[2] === e[2]+counter) {
-        return true;
-      }
-      return false;
-    })){
+    while (
+      slotsInt.some((element) => {
+        if (
+          element[0] === e[0] &&
+          element[1] === e[1] &&
+          element[2] === e[2] + counter
+        ) {
+          return true;
+        }
+        return false;
+      })
+    ) {
       counter++;
     }
-    lengths.push(counter)
-  })
+    lengths.push(counter);
+  });
 
-  console.log("idResStart")
+  console.log("idResStart");
   console.log(idResStart);
-  console.log("lengths " + lengths)
+  console.log("lengths " + lengths);
 
   // add new reservations to database
   // todo: !
+  sendSaveRequest(token);
+}
+
+function sendSaveRequest(token) {
+  console.log("send save");
+  const reservations = {
+    id: 1,
+    res_id: "1",
+    user_id: 1,
+    seat_id: 1,
+    workspacename: "123",
+    start: "2000-01-01",
+    duration: 4,
+    slot: "1",
+  };
+  const url = "http://localhost:8000/reservations/";
+  const request = {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token.access}`,
+    },
+    mode: "cors",
+    body: JSON.stringify(reservations),
+  };
+  const sendGet = async () => {
+    const response = await fetch(url, request).catch((error) =>
+      console.error("There was an error!", error)
+    );
+    console.log(response);
+    if (response.status === 200) {
+      console.log("success");
+      return await response.json();
+    }
+  };
+  return sendGet();
 }
 
 var diffDays = 0;
