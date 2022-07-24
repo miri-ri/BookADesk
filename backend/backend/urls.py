@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('reservations/', include('reservation.urls')),
     path('workspace/', include('workspace.urls')),
-    path('api/', include('api.urls'))
+    path('api/', include('api.urls')),
+    path('corona/', include('corona.urls'))
 
 ]

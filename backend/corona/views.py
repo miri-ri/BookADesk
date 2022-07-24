@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def corona_notifyUsers(request, sinceDay, user_id):
+def corona_notifyUsers(request, sinceDay, uname):
 
-    CoronaSendMails().searchPeople(sinceDay, user_id)
+    CoronaSendMails().searchPeople(sinceDay, uname)
     return Response()
