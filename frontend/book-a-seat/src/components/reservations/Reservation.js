@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import "./Reservation.css";
 
@@ -508,52 +509,49 @@ function saveChanges(token, reservations) {
 
   // add new reservations to database
   // todo: !
-  sendSaveRequest(token, reservations);
+  sendSaveRequest(token, reservations, idResStart, lengths);
 }
 
-function sendSaveRequest(token, reservations) {
-/*   const reservations_to_push = [];
-  for (let i; i < idResStart.length; i++) {
-    reservations_to_push.push({
-      res_id: reservations ? reservations.length : 0,
-      user_id: 1,
-    });
-  } */
-
-  console.log("send save");
-  /*   const reservations = {
-    id: 1,
-    res_id: "1",
-    user_id: 1,
-    seat_id: 1,
-    workspacename: "123",
-    start: "2000-01-01",
-    duration: 4,
-    slot: "1",
-    is_a_group: false,
-    is_rated: false,
-  }; */
+function sendSaveRequest(token, reservations, idResStart, lengths) {
+  console.log(idResStart);
+  console.log(lengths);
   const url = "http://localhost:8000/reservations/";
-  const request = {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${token.access}`,
-    },
-    mode: "cors",
-    body: JSON.stringify(reservations),
-  };
-  const sendGet = async () => {
-    const response = await fetch(url, request).catch((error) =>
-      console.error("There was an error!", error)
-    );
-    console.log(response);
-    if (response.status === 200) {
-      console.log("success");
-      return await response.json();
-    }
-  };
-  return sendGet();
+  for (let i = 0; i < idResStart.length; i++) {
+    console.log(idResStart[i][1]);
+    let id = (reservations ? reservations.length + i : 0 + i).toString();
+    let startDate = new Date(); // TODO: richtiges start datum erstellen
+    const new_reservation = {
+      id,
+      res_id: id,
+      username: jwtDecode(token.access).username,
+      seat_id: idResStart[i][1],
+      group_id: "dummy",  // TODO: brauchen wir die group id?
+      start: "2000-01-01",
+      duration: lengths[i],
+      is_rated: false,
+    };
+    console.log(new_reservation);
+    const request = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token.access}`,
+      },
+      mode: "cors",
+      body: JSON.stringify(new_reservation),
+    };
+    const sendGet = async () => {
+      const response = await fetch(url, request).catch((error) =>
+        console.error("There was an error!", error)
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("success");
+        return await response.json();
+      }
+    };
+    sendGet();
+  }
 }
 
 var diffDays = 0;
