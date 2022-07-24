@@ -177,8 +177,10 @@ function App() {
   };
 
   const resetPasswordRequest = (email) => {
-    return;
-    /*     const url = "http://localhost:8000/api/register/";
+    const url = "http://localhost:8000/api/resetrequest/";
+    const user = {
+      email: "niklas.sumalvico@outlook.de",
+    };
     const request = {
       method: "POST",
       headers: {
@@ -195,14 +197,18 @@ function App() {
         toLogin();
       }
     };
-    addUser(); */
+    addUser();
   };
 
   const setNewPasswordRequest = (email, otp, newPassword) => {
-    return;
-    /*     const url = "http://localhost:8000/api/register/";
+    const user = {
+      email: "niklas.sumalvico@outlook.de",
+      otp: otp,
+      password: newPassword,
+    };
+    const url = "http://localhost:8000/api/resetpassword/";
     const request = {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-type": "application/json",
       },
@@ -213,11 +219,11 @@ function App() {
       const response = await fetch(url, request).catch((error) =>
         console.error("There was an error!", error)
       );
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         toLogin();
       }
     };
-    addUser(); */
+    addUser();
   };
 
   const addWorkspace = (data) => {
@@ -284,7 +290,7 @@ function App() {
   const forgotPasswordElement = (
     <ForgotPassword
       toLogin={toLogin}
-      forgotPassword={resetPasswordRequest}
+      forgotPassword={() => resetPasswordRequest("")}
       resetPassword={setNewPasswordRequest}
     />
   );

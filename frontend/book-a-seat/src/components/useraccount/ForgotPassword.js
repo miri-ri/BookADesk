@@ -29,10 +29,10 @@ function ForgotPassword({ forgotPassword, resetPassword, toLogin }) {
           <Button
             title="Send Email"
             onClick={() => {
-              if (email) {
-                setEmailSend(true);
-                forgotPassword(email);
-              }
+              //if (email) {
+              setEmailSend(true);
+              forgotPassword(email);
+              //}
             }}
           />
           <Button title="Back" onClick={toLogin} />
