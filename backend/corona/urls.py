@@ -3,5 +3,5 @@ from .apps import CoronaSendMails
 
 
 urlpatterns = [
-    path('sendMailsToTheEndangered/fromUser/<int:user_id>/sinceDay/<int:sinceDay>/', CoronaSendMails.searchPeople),
+    path('sendMailsToTheEndangered/fromUser/<str:uname>/sinceDay/<int:sinceDay>/', CoronaSendMails.searchPeople),
 ]
