@@ -34,14 +34,18 @@ export const URLs = {
 
 function App() {
   const [user, setUser] = useState(() => {
-    const decodedTokenData = jwt_decode(localStorage.getItem("token"));
-    const user = {
-      username: decodedTokenData.username,
-      email: decodedTokenData.email,
-      id: decodedTokenData.user_id,
-    };
-    console.log(user);
-    return user;
+    if (localStorage.getItem("token")) {
+      const decodedTokenData = jwt_decode(localStorage.getItem("token"));
+      const user = {
+        username: decodedTokenData.username,
+        email: decodedTokenData.email,
+        id: decodedTokenData.user_id,
+      };
+      console.log(user);
+      return user;
+    } else {
+      return null;
+    }
   });
   const [token, setToken] = useState(() =>
     JSON.parse(localStorage.getItem("token"))
