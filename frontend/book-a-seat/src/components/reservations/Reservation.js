@@ -144,6 +144,7 @@ function Reservation({ token }) {
           class="ratingButton"
           onClick={() => {
             sendReview(review_res, review_stars, review_text, token);
+            window.location.reload(false);
           }}
         >
           Send Review
@@ -159,7 +160,10 @@ function Reservation({ token }) {
         <button
           id="saveButton"
           class="saveButton"
-          onClick={() => saveChanges(token, reservations, workspaces1)}
+          onClick={() => {
+            saveChanges(token, reservations, workspaces1);
+            window.location.reload(false);
+          }}
         >
           Save Changes
         </button>
@@ -196,6 +200,27 @@ function Reservation({ token }) {
   const [workspaces1, setWorkspaces] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [groups1, setGroups] = useState([]);
+
+  const [overlayWorkspace, setOverlayWorkspace] = useState();
+
+  const overlayDiv = (
+    <>
+      <div id="overlay-module" className="div-hidden">
+        <div className="overlay"></div>
+        <div className="overlay-content">
+          <h2>Workspace {overlayWorkspace ? overlayWorkspace.name : ""}</h2>
+          <p>Rating: <span className="star-clicked"><i class="fa fa-star"></i></span> {overlayWorkspace ? overlayWorkspace.workspace_rating : "-"}</p>
+          {overlayWorkspace ? (overlayWorkspace.is_barrier_free ? <p><span className="check"><i class="fa fa-check"></i></span>  is barrier free</p> : "") : ""}
+          {overlayWorkspace ? (overlayWorkspace.has_computer ? <p><span className="check"><i class="fa fa-check"></i></span>  has computer</p> : "") : ""}
+          <button onClick={() => {
+            var div = document.getElementById("overlay-module");
+            div.className = "div-hidden"
+          }}>Close</button>
+        </div>
+      </div>
+    </>
+  )
+  
 
   useEffect(() => {
     const setInitialValuses = async () => {
@@ -241,19 +266,18 @@ function Reservation({ token }) {
       </div>
     </>
   );
-
-  console.log("Reservations:")
-  console.log(reservations);
   const r = reservations.filter(checkUser);
 
   const myReservations = (
     <>
+      {overlayDiv}
       <br></br>
       <h2>My Reservations:</h2>
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">Seat</th>
+            <th scope="col">Group</th>
+            <th scope="col">Workspace</th>
             <th scope="col">Date</th>
             <th scope="col">Time</th>
             <th scape="col">Rating</th>
@@ -263,16 +287,17 @@ function Reservation({ token }) {
           {r.map((r, index) => (
             <>
               <tr>
-                <td>{r.seat_id}</td>
-                <td>{getDateFormat(new Date(r.start))}</td>
-                <td>
+                <td className="res-cell">{r.group_id}</td>
+                <td className="res-cell">{r.seat_id}</td>
+                <td className="res-cell">{getDateFormat(new Date(r.start))}</td>
+                <td className="res-cell">
                   {new Date(r.start).getHours() +
                     ":00 - " +
                     (new Date(r.start).getHours() + r.duration) +
                     ":00"}
                 </td>
-                <td>
-                  {[...Array(5)].map((star, indexStar) =>
+                <td className="res-cell">
+                  {r.is_rated ? <span className="check"><i class="fa fa-check"></i></span> : [...Array(5)].map((star, indexStar) =>
                     starRating(star, index, indexStar, r)
                   )}
                 </td>
@@ -287,6 +312,7 @@ function Reservation({ token }) {
   );
 
   function starRating(_star, index, indexStar, res) {
+    if(new Date(res.start)>new Date()){return null;}
     return (
       <span
         className="star"
@@ -358,7 +384,7 @@ function Reservation({ token }) {
           </tr>
           <tr class="t-row">
             <th scope="col" class="sidebar">
-              Rooms:
+              Groups:
             </th>
             {days &&
               days.map(
@@ -376,7 +402,7 @@ function Reservation({ token }) {
           </tr>
           <tr id="seats-row" class="t-row">
             <th scope="col" class="sidebar">
-              Seats:
+              Workspaces:
             </th>
             {days &&
               days.map(
@@ -385,8 +411,13 @@ function Reservation({ token }) {
                   groups1.map((group) => 
                     seatsInGroup(group.name).map((seat) => (
                       <th
-                        class="cell-selected"
+                        class="t-head"
                         id={i + "_seat_" + 1}
+                        onClick={()=>{
+                          var div = document.getElementById("overlay-module");
+                          div.className = "overlay-module"
+                          setOverlayWorkspace(seat);
+                        }}
                       >
                         {seat.name}
                       </th>
@@ -694,7 +725,6 @@ function checkBooked(reservations, workplace, day, time) {
       }
     }
   });
-  console.log(testUserID);
   return output;
 }
 
