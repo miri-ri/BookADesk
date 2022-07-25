@@ -144,6 +144,7 @@ function Reservation({ token }) {
           class="ratingButton"
           onClick={() => {
             sendReview(review_res, review_stars, review_text, token);
+            window.location.reload(false);
           }}
         >
           Send Review
@@ -159,7 +160,10 @@ function Reservation({ token }) {
         <button
           id="saveButton"
           class="saveButton"
-          onClick={() => saveChanges(token, reservations, workspaces1)}
+          onClick={() => {
+            saveChanges(token, reservations, workspaces1);
+            window.location.reload(false);
+          }}
         >
           Save Changes
         </button>
