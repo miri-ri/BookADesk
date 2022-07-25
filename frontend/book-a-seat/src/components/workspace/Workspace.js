@@ -147,8 +147,8 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
             <th scope="col">Name</th>
             <th scope="col">Group</th>
             <th scope="col">Comment</th>
-            <th scope="col">Is Barrier Free</th>
-            <th scope="col">Has Computer</th>
+            <th scope="col" style={{lineHeight: "15px"}}>Is Barrier Free</th>
+            <th scope="col" style={{lineHeight: "15px"}}>Has Computer</th>
             <th scope="col">Rating</th>
           </tr>
         </thead>
@@ -167,7 +167,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
                 <tr>
                   <td>{name}</td>
                   <td>{group}</td>
-                  <td>{comment}</td>
+                  <td style={{lineHeight: "15px"}}>{comment}</td>
                   <td>{is_barrier_free ? "Yes" : "No"}</td>
                   <td>{has_computer ? "Yes" : "No"}</td>
                   <td>{workspace_rating}</td>

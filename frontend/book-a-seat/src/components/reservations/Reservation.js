@@ -7,81 +7,6 @@ var testUserID = 2;
 
 var selectedRoom = null;
 
-/* const saveButton = (
-  <>
-    <div id="saveButtonDiv" class="div-hidden">
-      <button id="saveButton" class="saveButton" onClick={saveChanges}>
-        Save Changes
-      </button>
-      <br></br>
-    </div>
-  </>
-); */
-
-/* const sendRatingButton = (
-  <>
-    <div id="sendRatingButton">
-      <button
-        id="ratingButton"
-        class="ratingButton"
-        onClick={console.log("save")}
-      >
-        Send Review
-      </button>
-      <br></br>
-    </div>
-  </>
-); */
-
-/* let reservations = [
-  {
-    id: 1,
-    user_id: 3,
-    seat_id: "a",
-    start: "2022-07-14T12:00:00+02:00",
-    duration: 1,
-  },
-  {
-    id: 2,
-    user_id: 2,
-    seat_id: "b",
-    start: "2022-07-15T08:00:00+02:00",
-    duration: 3,
-  },
-  {
-    id: 3,
-    user_id: 2,
-    seat_id: "a",
-    start: "2022-07-15T14:00:00+02:00",
-    duration: 2,
-  },
-  {
-    id: 4,
-    user_id: 1,
-    seat_id: "c",
-    start: "2022-07-16T11:00:00+02:00",
-    duration: 4,
-  },
-  {
-    id: 5,
-    user_id: 2,
-    seat_id: "c",
-    start: "2022-07-16T11:00:00+02:00",
-    duration: 6,
-  },
-  {
-    id: 6,
-    user_id: 1,
-    seat_id: "c",
-    start: "2022-07-17T12:00:00+02:00",
-    duration: 4,
-  },
-];
-
-let workspaces = [{name:"1"}, {name:"2"}, {name:"3"}, {name:"4"}, {name:"5"}, {name:"6"}];
-
-let groups = [{name:"a"}, {name:"b"}, {name:"c"}]; */
-
 function Reservation({ token }) {
   testUserID = jwtDecode(token.access).username;
 
@@ -201,6 +126,27 @@ function Reservation({ token }) {
   const [reservations, setReservations] = useState([]);
   const [groups1, setGroups] = useState([]);
 
+  const [overlayWorkspace, setOverlayWorkspace] = useState();
+
+  const overlayDiv = (
+    <>
+      <div id="overlay-module" className="div-hidden">
+        <div className="overlay"></div>
+        <div className="overlay-content">
+          <h2>Workspace {overlayWorkspace ? overlayWorkspace.name : ""}</h2>
+          <p>Rating: <span className="star-clicked"><i class="fa fa-star"></i></span> {overlayWorkspace ? overlayWorkspace.workspace_rating : "-"}</p>
+          {overlayWorkspace ? (overlayWorkspace.is_barrier_free ? <p><span className="check"><i class="fa fa-check"></i></span>  is barrier free</p> : "") : ""}
+          {overlayWorkspace ? (overlayWorkspace.has_computer ? <p><span className="check"><i class="fa fa-check"></i></span>  has computer</p> : "") : ""}
+          <button onClick={() => {
+            var div = document.getElementById("overlay-module");
+            div.className = "div-hidden"
+          }}>Close</button>
+        </div>
+      </div>
+    </>
+  )
+  
+
   useEffect(() => {
     const setInitialValuses = async () => {
       console.log("set initial values");
@@ -249,12 +195,14 @@ function Reservation({ token }) {
 
   const myReservations = (
     <>
+      {overlayDiv}
       <br></br>
       <h2>My Reservations:</h2>
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">Seat</th>
+            <th scope="col">Group</th>
+            <th scope="col">Workspace</th>
             <th scope="col">Date</th>
             <th scope="col">Time</th>
             <th scape="col">Rating</th>
@@ -264,16 +212,17 @@ function Reservation({ token }) {
           {r.map((r, index) => (
             <>
               <tr>
-                <td>{r.seat_id}</td>
-                <td>{getDateFormat(new Date(r.start))}</td>
-                <td>
+                <td className="res-cell">{r.group_id}</td>
+                <td className="res-cell">{r.seat_id}</td>
+                <td className="res-cell">{getDateFormat(new Date(r.start))}</td>
+                <td className="res-cell">
                   {new Date(r.start).getHours() +
                     ":00 - " +
                     (new Date(r.start).getHours() + r.duration) +
                     ":00"}
                 </td>
-                <td>
-                  {[...Array(5)].map((star, indexStar) =>
+                <td className="res-cell">
+                  {r.is_rated ? <span className="check"><i class="fa fa-check"></i></span> : [...Array(5)].map((star, indexStar) =>
                     starRating(star, index, indexStar, r)
                   )}
                 </td>
@@ -288,6 +237,7 @@ function Reservation({ token }) {
   );
 
   function starRating(_star, index, indexStar, res) {
+    if(new Date(res.start)>new Date()){return null;}
     return (
       <span
         className="star"
@@ -332,28 +282,17 @@ function Reservation({ token }) {
   }
   var counter = 0;
 
-  var selectedGroup = null;
-  var showSeats;
-
-  var seats = (
-    <>
-      <tr id="seats-row" class="div-hidden">
-        <th scope="col" class="sidebar">
-          Seats:
-        </th>
-        {days &&
-          days.map(
-            (_day, i) =>
-              showSeats &&
-              showSeats.map((workspace, index) => (
-                <th class="cell-selected" id={i + "_seat_" + index}>
-                  {workspace.name}
-                </th>
-              ))
-          )}
-      </tr>
-    </>
-  );
+  function seatsInGroup(groupname){
+    var showSeats = [];
+    for(let i = 0; i<workspaces1.length; i++){
+      if(workspaces1[i].group===groupname){
+        showSeats.push(workspaces1[i]);
+      }
+    }
+    changeCellWidth(workspaces1.length, groupname, showSeats.length)
+    return showSeats;
+  }
+  
 
   const table = (
     <>
@@ -370,7 +309,7 @@ function Reservation({ token }) {
           </tr>
           <tr class="t-row">
             <th scope="col" class="sidebar">
-              Rooms:
+              Groups:
             </th>
             {days &&
               days.map(
@@ -380,14 +319,37 @@ function Reservation({ token }) {
                     <th
                       class="t-head"
                       id={i + "_room_" + index}
-                      onClick={(_e) => buttonRoom(i, index)} //buttonRoom(i + "_room_" + index)}
                     >
                       {group.name}
                     </th>
                   ))
               )}
           </tr>
-          {seats}
+          <tr id="seats-row" class="t-row">
+            <th scope="col" class="sidebar">
+              Workspaces:
+            </th>
+            {days &&
+              days.map(
+                (_day, i) =>
+                  groups1 &&
+                  groups1.map((group) => 
+                    seatsInGroup(group.name).map((seat) => (
+                      <th
+                        class="t-head"
+                        id={i + "_seat_" + 1}
+                        onClick={()=>{
+                          var div = document.getElementById("overlay-module");
+                          div.className = "overlay-module"
+                          setOverlayWorkspace(seat);
+                        }}
+                      >
+                        {seat.name}
+                      </th>
+                    ))
+                  )
+              )}
+          </tr>
         </thead>
         <tbody>
           {times.map((time) => (
@@ -400,10 +362,12 @@ function Reservation({ token }) {
                   (day) =>
                     groups1 &&
                     groups1.map((group) =>
-                      checkBooked(reservations, group.name, day, time)
+                      seatsInGroup(group.name).map((seat) => 
+                        checkBooked(reservations, seat.name, day, time)
                     )
-                )}
-            </tr>
+                  )
+              )}
+          </tr>
           ))}
         </tbody>
       </table>
@@ -411,43 +375,15 @@ function Reservation({ token }) {
     </>
   );
 
-  function buttonRoom(day, index) {
-    const id = day + "_room_" + index;
-    console.log(id);
-    selectedGroup = index;
-    showSeats = workspaces1.filter(function(e) {
-      console.log(groups1[selectedGroup].name);
-      return e.group == groups1[selectedGroup].name;
-    });
-    console.log(showSeats);
-    var element = document.getElementById(id);
-    var row = document.getElementById("seats-row");
-    if (element.className === "cell-selected" && selectedRoom == id) {
-      for (let i = 0; i < amountShownDays; i++) {
-        var element = document.getElementById(i + "_room_" + index);
-        element.className = "t-head";
-      }
-      row.className = "div-hidden";
-      selectedRoom = null;
-      changeCellWidth(groups1.length);
-    } else if (selectedRoom == null) {
-      for (let i = 0; i < amountShownDays; i++) {
-        var element = document.getElementById(i + "_room_" + index);
-        element.className = "cell-selected";
-      }
-      row.className = "t-row";
-      selectedRoom = id;
-      changeCellWidth(workspaces1.length);
-    }
-  }
-
-  function changeCellWidth(width) {
-    for (let i = 0; i < amountShownDays; i++) {
-      var day = document.getElementById("day_" + i);
-      day.colSpan = width;
-      for (let k = 0; k < groups1.length; k++) {
-        var group = document.getElementById(i + "_room_" + k);
-        group.colSpan = width / groups1.length;
+  function changeCellWidth(widthDays, groupname, widthGroup) {
+    for(let i = 0; i<amountShownDays; i++){
+      var day = document.getElementById("day_"+i);
+      day.colSpan = widthDays;
+      for(let k = 0; k<groups1.length; k++){
+        var group = document.getElementById(i+"_room_"+k);
+        if(group!==null && groups1[k].name===groupname){
+          group.colSpan = widthGroup;
+        }
       }
     }
   }
@@ -474,12 +410,11 @@ function selectSlotToAdd(id) {
     if (selectedSlots_ID.length === 0) {
       button.className = "div-hidden";
     }
-  } else {
+  } else if(e.className === "cell"){
     e.className = "cell-selected";
     selectedSlots_ID.push(id);
     button.className = "div";
   }
-  console.log("Selected Slots: " + selectedSlots_ID);
 }
 
 function editSlot(_workplace, _date, _time, id) {
@@ -488,6 +423,8 @@ function editSlot(_workplace, _date, _time, id) {
 }
 
 function saveChanges(token, reservations, workspaces) {
+  console.log("Selected Slots: " + selectedSlots_ID);
+
   // ID strings are being sorted
   var collator = new Intl.Collator(undefined, {
     numeric: true,
@@ -543,7 +480,6 @@ function saveChanges(token, reservations, workspaces) {
   console.log("lengths " + lengths);
 
   // add new reservations to database
-  // todo: !
   sendSaveRequest(token, reservations, idResStart, lengths, workspaces);
 }
 
