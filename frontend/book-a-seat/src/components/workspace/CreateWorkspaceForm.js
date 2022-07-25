@@ -18,7 +18,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
   const getGroups = () => {
     console.log("get groups");
     console.log(token);
-    const url = "http://localhost:8000/workspace/group";
+    const url = "http://34.141.109.26:8000/workspace/group";
     const request = {
       method: "GET",
       headers: {
@@ -42,7 +42,7 @@ function CreateWorkspaceForm({ sendCreateRequest, toWorkspace, token }) {
 
   const addWorkspace = () => {
     console.log("add workplace");
-    const url = "http://localhost:8000/workspace/add/";
+    const url = "http://34.141.109.26:8000/workspace/add/";
     const newWorkspace = {
       name,
       group,

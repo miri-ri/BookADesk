@@ -87,7 +87,7 @@ function Reservation({ token }) {
 
   function getWorkspaces() {
     console.log("get workplaces");
-    const url = "http://localhost:8000/workspace/";
+    const url = "http://34.141.109.26:8000/workspace/";
     const request = {
       method: "GET",
       headers: {
@@ -111,7 +111,7 @@ function Reservation({ token }) {
 
   function getReservations() {
     console.log("get reservations");
-    const url = "http://localhost:8000/reservations/";
+    const url = "http://34.141.109.26:8000/reservations/";
     const request = {
       method: "GET",
       headers: {
@@ -175,7 +175,7 @@ function Reservation({ token }) {
   const getGroups = () => {
     console.log("get groups");
     console.log(token);
-    const url = "http://localhost:8000/workspace/group";
+    const url = "http://34.141.109.26:8000/workspace/group";
     const request = {
       method: "GET",
       headers: {
@@ -555,7 +555,7 @@ function sendReview(res, stars, text, token) {
     star_rating: stars,
   };
   console.log(review);
-  const url = "http://localhost:8000/workspace/rating/add/";
+  const url = "http://34.141.109.26:8000/workspace/rating/add/";
   const request = {
     method: "POST",
     headers: {
@@ -579,7 +579,7 @@ function sendReview(res, stars, text, token) {
 }
 
 function sendSaveRequest(token, reservations, idResStart, lengths, workspaces) {
-  const url = "http://localhost:8000/reservations/";
+  const url = "http://34.141.109.26:8000/reservations/";
   for (let i = 0; i < idResStart.length; i++) {
     let id = (reservations ? reservations.length + i : 0 + i).toString();
     var startDate = new Date();

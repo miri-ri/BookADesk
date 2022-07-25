@@ -105,7 +105,7 @@ function App() {
   };
 
   const login = ({ username, password }) => {
-    const url = "http://localhost:8000/api/token/";
+    const url = "http://34.141.109.26:8000/api/token/";
     const request = {
       method: "POST",
       headers: {
@@ -160,7 +160,7 @@ function App() {
       password: userData.password,
       password2: userData.password,
     };
-    const url = "http://localhost:8000/api/register/";
+    const url = "http://34.141.109.26:8000/api/register/";
     const request = {
       method: "POST",
       headers: {
@@ -181,7 +181,7 @@ function App() {
   };
 
   const resetPasswordRequest = (email) => {
-    const url = "http://localhost:8000/api/resetrequest/";
+    const url = "http://34.141.109.26:8000/api/resetrequest/";
     const user = {
       email: "niklas.sumalvico@outlook.de",
     };
@@ -210,7 +210,7 @@ function App() {
       otp: otp,
       password: newPassword,
     };
-    const url = "http://localhost:8000/api/resetpassword/";
+    const url = "http://34.141.109.26:8000/api/resetpassword/";
     const request = {
       method: "PUT",
       headers: {

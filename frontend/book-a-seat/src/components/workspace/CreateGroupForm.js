@@ -12,7 +12,7 @@ function CreateGroupForm({ sendCreateRequest, toWorkspace, token }) {
 
   const addGroup = () => {
     console.log("add workplace");
-    const url = "http://localhost:8000/workspace/group/add/";
+    const url = "http://34.141.109.26:8000/workspace/group/add/";
     const newGroup = {
       name,
     };

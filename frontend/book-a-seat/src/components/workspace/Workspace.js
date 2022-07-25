@@ -11,7 +11,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   const getWorkspaces = () => {
     console.log("get workplaces");
     console.log(token);
-    const url = "http://localhost:8000/workspace/";
+    const url = "http://34.141.109.26:8000/workspace/";
     const request = {
       method: "GET",
       headers: {
@@ -40,7 +40,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   const deleteWorkspace = (id) => {
     console.log("delete workplaces");
     console.log(token);
-    const url = "http://localhost:8000/workspace/delete/" + id + "/";
+    const url = "http://34.141.109.26:8000/workspace/delete/" + id + "/";
     const request = {
       method: "DELETE",
       headers: {
@@ -65,7 +65,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   const getGroups = () => {
     console.log("get groups");
     console.log(token);
-    const url = "http://localhost:8000/workspace/group";
+    const url = "http://34.141.109.26:8000/workspace/group";
     const request = {
       method: "GET",
       headers: {
@@ -90,7 +90,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   const deleteGroup = (id) => {
     console.log("delete group");
     console.log(token);
-    const url = "http://localhost:8000/workspace/group/delete/" + id + "/";
+    const url = "http://34.141.109.26:8000/workspace/group/delete/" + id + "/";
     const request = {
       method: "DELETE",
       headers: {

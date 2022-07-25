@@ -19,7 +19,7 @@ function EditWorkspaceForm({ toWorkspace, workspace, token }) {
   const getGroups = () => {
     console.log("get groups");
     console.log(token);
-    const url = "http://localhost:8000/workspace/group";
+    const url = "http://34.141.109.26:8000/workspace/group";
     const request = {
       method: "GET",
       headers: {
@@ -43,7 +43,7 @@ function EditWorkspaceForm({ toWorkspace, workspace, token }) {
 
   const editWorkspace = () => {
     console.log("edit workplace");
-    const url = "http://localhost:8000/workspace/edit/" + workspace.id + "/";
+    const url = "http://34.141.109.26:8000/workspace/edit/" + workspace.id + "/";
     const newWorkspace = {
       name,
       group,
