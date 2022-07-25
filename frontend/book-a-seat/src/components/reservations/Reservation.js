@@ -209,7 +209,7 @@ function Reservation({ token }) {
           </tr>
         </thead>
         <tbody>
-          {r.map((r, index) => (
+          {r.length>0 ? r.map((r, index) => (
             <>
               <tr>
                 <td className="res-cell">{r.group_id}</td>
@@ -228,7 +228,7 @@ function Reservation({ token }) {
                 </td>
               </tr>
             </>
-          ))}
+          )) : "No reservations yet"}
         </tbody>
       </table>
 
@@ -392,6 +392,7 @@ function Reservation({ token }) {
     <>
       <div className="body">
         <h2>Reservation:</h2>
+        
         {table}
         {myReservations}
       </div>
@@ -415,11 +416,6 @@ function selectSlotToAdd(id) {
     selectedSlots_ID.push(id);
     button.className = "div";
   }
-}
-
-function editSlot(_workplace, _date, _time, id) {
-  var e = document.getElementById(id);
-  e.className = "cell-selected";
 }
 
 function saveChanges(token, reservations, workspaces) {
@@ -607,7 +603,6 @@ function checkBooked(reservations, workplace, day, time) {
                 id={id}
                 class={classCellBooked}
                 rowSpan={r.duration}
-                onClick={() => editSlot(workplace, date, time, id)}
               ></td>
             );
           }
