@@ -7,81 +7,6 @@ var testUserID = 2;
 
 var selectedRoom = null;
 
-/* const saveButton = (
-  <>
-    <div id="saveButtonDiv" class="div-hidden">
-      <button id="saveButton" class="saveButton" onClick={saveChanges}>
-        Save Changes
-      </button>
-      <br></br>
-    </div>
-  </>
-); */
-
-/* const sendRatingButton = (
-  <>
-    <div id="sendRatingButton">
-      <button
-        id="ratingButton"
-        class="ratingButton"
-        onClick={console.log("save")}
-      >
-        Send Review
-      </button>
-      <br></br>
-    </div>
-  </>
-); */
-
-/* let reservations = [
-  {
-    id: 1,
-    user_id: 3,
-    seat_id: "a",
-    start: "2022-07-14T12:00:00+02:00",
-    duration: 1,
-  },
-  {
-    id: 2,
-    user_id: 2,
-    seat_id: "b",
-    start: "2022-07-15T08:00:00+02:00",
-    duration: 3,
-  },
-  {
-    id: 3,
-    user_id: 2,
-    seat_id: "a",
-    start: "2022-07-15T14:00:00+02:00",
-    duration: 2,
-  },
-  {
-    id: 4,
-    user_id: 1,
-    seat_id: "c",
-    start: "2022-07-16T11:00:00+02:00",
-    duration: 4,
-  },
-  {
-    id: 5,
-    user_id: 2,
-    seat_id: "c",
-    start: "2022-07-16T11:00:00+02:00",
-    duration: 6,
-  },
-  {
-    id: 6,
-    user_id: 1,
-    seat_id: "c",
-    start: "2022-07-17T12:00:00+02:00",
-    duration: 4,
-  },
-];
-
-let workspaces = [{name:"1"}, {name:"2"}, {name:"3"}, {name:"4"}, {name:"5"}, {name:"6"}];
-
-let groups = [{name:"a"}, {name:"b"}, {name:"c"}]; */
-
 function Reservation({ token }) {
   testUserID = jwtDecode(token.access).username;
 
@@ -449,36 +374,6 @@ function Reservation({ token }) {
       {saveButton}
     </>
   );
-
-  /*function buttonRoom(day, index) {
-    const id = day + "_room_" + index;
-    console.log(id);
-    selectedGroup = index;
-    showSeats = workspaces1.filter(function(e) {
-      console.log(groups1[selectedGroup].name);
-      return e.group == groups1[selectedGroup].name;
-    });
-    console.log(showSeats);
-    var element = document.getElementById(id);
-    var row = document.getElementById("seats-row");
-    if (element.className === "cell-selected" && selectedRoom == id) {
-      for (let i = 0; i < amountShownDays; i++) {
-        var element = document.getElementById(i + "_room_" + index);
-        element.className = "t-head";
-      }
-      row.className = "div-hidden";
-      selectedRoom = null;
-      changeCellWidth(groups1.length);
-    } else if (selectedRoom == null) {
-      for (let i = 0; i < amountShownDays; i++) {
-        var element = document.getElementById(i + "_room_" + index);
-        element.className = "cell-selected";
-      }
-      row.className = "t-row";
-      selectedRoom = id;
-      changeCellWidth(workspaces1.length);
-    }
-  }*/
 
   function changeCellWidth(widthDays, groupname, widthGroup) {
     for(let i = 0; i<amountShownDays; i++){
