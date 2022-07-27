@@ -41,13 +41,13 @@ def getRoutes(request):
     ]
     return Response(routes)
 
+# password reset request sends otp to email
 @api_view(['POST'])
 def reset_request(request):
     data = request.data
     email = data['email']
     user = CustomUser.objects.get(email=email)
     if CustomUser.objects.filter(email=email).exists():
-        # send email with otp
         send_mail(
         'Wiederherstellung des Passworts',
         f'Hier ist dein OTP {user.otp}.',
@@ -63,9 +63,9 @@ def reset_request(request):
             'detail': 'Some Error Message'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
+#password change with correct otp
 @api_view(['PUT'])
 def reset_password(request):
-    """reset_password with email, OTP and new password"""
     data = request.data
     user = CustomUser.objects.get(email=data['email'])
     if user.is_active:
@@ -74,8 +74,8 @@ def reset_password(request):
             if data['password'] != '':
                 # Change Password
                 user.set_password(data['password'])
-                user.save() # Here user otp will also be changed on save automatically
-                return Response('any response or you can add useful information with response as well. ')
+                user.save()
+                return Response('')
             else:
                 message = {
                     'detail': 'Password cant be empty'}
