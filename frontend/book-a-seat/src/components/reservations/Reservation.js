@@ -2,14 +2,16 @@ import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import "./Reservation.css";
 
-const amountShownDays = 7;
+const amountShownDays = 7; // Amount of future days in table
 var testUserID = 2;
 
-var selectedRoom = null;
-
 function Reservation({ token }) {
-  testUserID = jwtDecode(token.access).username;
+  testUserID = jwtDecode(token.access).username;  // Logged in User
 
+  /**
+  * Function that reads out the workspaces
+  * @return   {Promise<Response>}
+  */
   function getWorkspaces() {
     console.log("get workplaces");
     const url = "http://34.141.109.26:8000/workspace/";
@@ -34,6 +36,10 @@ function Reservation({ token }) {
     return sendGet();
   }
 
+  /**
+  * Function that reads out the reservations
+  * @return   {Promise<Response>}
+  */
   function getReservations() {
     console.log("get reservations");
     const url = "http://34.141.109.26:8000/reservations/";
@@ -93,6 +99,10 @@ function Reservation({ token }) {
     </>
   );
 
+  /**
+  * Function that reads out the groups
+  * @return   {Promise<Response>}
+  */
   const getGroups = () => {
     console.log("get groups");
     console.log(token);
@@ -124,6 +134,7 @@ function Reservation({ token }) {
 
   const [overlayWorkspace, setOverlayWorkspace] = useState();
 
+  /** @const overlayDiv - r */
   const overlayDiv = (
     <>
       <div id="overlay-module" className="div-hidden">
@@ -232,6 +243,14 @@ function Reservation({ token }) {
     </>
   );
 
+
+  /**
+  * Function that creates a specific cell in the table and checks whether a reservation is registered that is valid in this time slot.
+  * @param    {number} star       -  Star
+  * @param    {number} index      -  Reservation Index
+  * @param    {number} indexStar  -  Star Index = Rating
+  * @param    {Object} res        -  Reservation
+  */
   function starRating(_star, index, indexStar, res) {
     if(new Date(res.start)>new Date()){return null;}
     return (
@@ -278,6 +297,12 @@ function Reservation({ token }) {
   }
   var counter = 0;
 
+
+  /**
+  * Function that reads out all workplaces of a group and adds them to the table
+  * @param    {string} groupname  -  Group name
+  * @return   {Object[]}          -  Workspaces Array 
+  */
   function seatsInGroup(groupname){
     var showSeats = [];
     for(let i = 0; i<workspaces1.length; i++){
@@ -288,7 +313,6 @@ function Reservation({ token }) {
     changeCellWidth(workspaces1.length, groupname, showSeats.length)
     return showSeats;
   }
-  
 
   const table = (
     <>
@@ -398,6 +422,10 @@ function Reservation({ token }) {
 
 var selectedSlots_ID = [];
 
+/**
+* Function that colours or uncolours the table cells when clicked on
+* @param    {string} id  -  Cell ID
+*/
 function selectSlotToAdd(id) {
   var e = document.getElementById(id);
   var button = document.getElementById("saveButtonDiv");
@@ -414,6 +442,12 @@ function selectSlotToAdd(id) {
   }
 }
 
+/**
+* Function that formats and creates new reservations
+* @param    {string} token           -  Token of the logged in user
+* @param    {Object[]} reservations  -  All registered reservations
+* @param    {Object[]} workspaces    -  All registered workplaces
+*/
 function saveChanges(token, reservations, workspaces) {
   console.log("Selected Slots: " + selectedSlots_ID);
 
@@ -475,6 +509,13 @@ function saveChanges(token, reservations, workspaces) {
   sendSaveRequest(token, reservations, idResStart, lengths, workspaces);
 }
 
+/**
+* Function that sends a POST request to send the review
+* @param    {Object} res    -  Associated reservation
+* @param    {number} stars  -  Rating
+* @param    {string} text   -  Review Text
+* @param    {string} token  -  Token of the logged in user
+*/
 function sendReview(res, stars, text, token) {
   const review = {
     workspace: res.seat_id,
@@ -506,6 +547,14 @@ function sendReview(res, stars, text, token) {
   sendGet();
 }
 
+/**
+* Function that sends a POST request to create all new reservations
+* @param    {string} token                 -  Token of the logged in user
+* @param    {Object[]} reservations        -  New reservations to be added
+* @param    {Object[number[]]} idResStart  -  The start time of all new reservations
+* @param    {number[]} lengths             -  Duration of the reservations
+* @param    {Object[]} workspaces          -  All registered workspaces
+*/
 function sendSaveRequest(token, reservations, idResStart, lengths, workspaces) {
   const url = "http://34.141.109.26:8000/reservations/";
   for (let i = 0; i < idResStart.length; i++) {
@@ -523,7 +572,7 @@ function sendSaveRequest(token, reservations, idResStart, lengths, workspaces) {
       res_id: id,
       username: jwtDecode(token.access).username,
       seat_id: idResStart[i][1],
-      group_id: data ? data.group : "dummy", // TODO: brauchen wir die group id?
+      group_id: data ? data.group : "dummy",
       start: startDate.toString(),
       duration: lengths[i],
       is_rated: false,
@@ -555,6 +604,11 @@ function sendSaveRequest(token, reservations, idResStart, lengths, workspaces) {
 var diffDays = 0;
 var startDay = "";
 
+/**
+* Function that creates a specific cell in the table and checks whether a reservation is registered that is valid in this time slot
+* @param    {Object[]} reservations  -  All registered reservations
+* @return   {JSX.Element}            -  td-Element for html table
+*/
 function checkBooked(reservations, workplace, day, time) {
   let datepieces = day.split(".");
   var date = new Date(
@@ -614,6 +668,11 @@ function checkBooked(reservations, workplace, day, time) {
   return output;
 }
 
+/**
+* Function that formats a given date to a string
+* @param    {Date} date  -  Date
+* @return   {string}     -  Date String (e.g. 28.7.2022)
+*/
 function getDateFormat(date) {
   var day = date.getDate();
   var month = date.getMonth() + 1;
@@ -621,6 +680,11 @@ function getDateFormat(date) {
   return day + "." + month + "." + year;
 }
 
+/**
+* Function that checks if the reservation belongs to the logged in user
+* @param    {Object} res  -  Reservation
+* @return   {boolean}       
+*/
 function checkUser(res) {
   return res.username === testUserID;
 }

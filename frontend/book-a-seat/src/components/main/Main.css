@@ -47,6 +47,7 @@
 .container {
   display: flex;
 }
+
 .body {
   padding: 20px;
   margin-bottom: -32px;

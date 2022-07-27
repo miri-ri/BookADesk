@@ -2,6 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
 
+/**
+* Function that builds the header with the overviewButton
+* @return   {JSX.Element}  -  Header
+*/
 function Header() {
   const overviewButton = (
     <button
