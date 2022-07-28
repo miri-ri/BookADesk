@@ -134,7 +134,7 @@ function Reservation({ token }) {
 
   const [overlayWorkspace, setOverlayWorkspace] = useState();
 
-  /** @const overlayDiv - r */
+  /** @const overlayDiv - Overlay for click on workspace name */
   const overlayDiv = (
     <>
       <div id="overlay-module" className="div-hidden">
