@@ -2,6 +2,10 @@ import React, { useContext } from "react";
 import { GlobalContext, URLs } from "../../App";
 import Button from "../ui-common/Button";
 
+/**
+  * Function that builds the start page
+  * @return   {JSX.Element}
+  */
 function Welcome() {
   const { navigate } = useContext(GlobalContext);
   const loginButtonElement = (

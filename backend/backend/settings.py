@@ -32,7 +32,10 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+#static IP from the Google Cloud Compute Engine VM
+ALLOWED_HOSTS = ["34.141.109.26"]
+
 
 
 # Application definition

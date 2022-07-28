@@ -11,7 +11,7 @@ function EditGroupForm({ group, toWorkspace, token }) {
   const { navigate } = useContext(GlobalContext);
 
   const editGroup = () => {
-    const url = "http://localhost:8000/workspace/group/edit/" + group.id + "/";
+    const url = "http://34.141.109.26:8000/workspace/group/edit/" + group.id + "/";
     const newGroup = {
       name,
     };

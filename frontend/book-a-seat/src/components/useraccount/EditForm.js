@@ -19,7 +19,7 @@ function EditForm({ toDetails }) {
       username: userData.username,
       email: userData.email,
     };
-    const url = "http://localhost:8000/api/user/" + user.id + "/";
+    const url = "http://34.141.109.26:8000/api/user/" + user.id + "/";
     const request = {
       method: "PUT",
       headers: {
@@ -45,7 +45,7 @@ function EditForm({ toDetails }) {
 
   /*   const getUser = () => {
     console.log("get user");
-    const url = "http://localhost:8000/api/user/" + user.id;
+    const url = "http://34.141.109.26:8000/api/user/" + user.id;
     const request = {
       method: "GET",
       headers: {

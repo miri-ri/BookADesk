@@ -50,7 +50,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email']
         )
-
+        # Free eMail SMTP Server -> eMails can currently only be sent to unlocked accounts, would be specific to the user in real use
         send_mail('Neuer Account registriert', 'Neuer Account registriert', 'BookADesk@BookADesk.com', ['niklas.sumalvico@outlook.de'])
 
         user.set_password(validated_data['password'])

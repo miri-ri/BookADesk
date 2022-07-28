@@ -3,6 +3,7 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+
 .header {
   left: 0;
   top: 0;
@@ -13,12 +14,14 @@ body {
   padding: 7px 20px;
   width: 100%;
 }
+
 .header-left {
   padding: 9px 0;
   vertical-align: top;
   display: inline-block;
   text-align: left;
 }
+
 .header-right {
   padding: 21px;
   margin: auto;

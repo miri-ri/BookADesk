@@ -19,7 +19,7 @@ function EditWorkspaceForm({ toWorkspace, workspace, token }) {
   const getGroups = () => {
     console.log("get groups");
     console.log(token);
-    const url = "http://localhost:8000/workspace/group";
+    const url = "http://34.141.109.26:8000/workspace/group";
     const request = {
       method: "GET",
       headers: {
@@ -43,7 +43,7 @@ function EditWorkspaceForm({ toWorkspace, workspace, token }) {
 
   const editWorkspace = () => {
     console.log("edit workplace");
-    const url = "http://localhost:8000/workspace/edit/" + workspace.id + "/";
+    const url = "http://34.141.109.26:8000/workspace/edit/" + workspace.id + "/";
     const newWorkspace = {
       name,
       group,
@@ -77,18 +77,14 @@ function EditWorkspaceForm({ toWorkspace, workspace, token }) {
   const [groups, setGroups] = useState([]);
 
   const setInitialValuses = async () => {
-    setGroups(
-      await getGroups().then((val) => {
-        setGroup(val[0].name);
-        return val;
-      })
-    );
+    setGroups(await getGroups());
   };
 
   useEffect(() => {
     setInitialValuses();
   }, []);
 
+  console.log(group);
   // TODO: groups as dropdown selection
   return (
     <>
@@ -118,8 +114,8 @@ function EditWorkspaceForm({ toWorkspace, workspace, token }) {
             <input
               className="form-check-input mt-3"
               type="checkbox"
-              value={isBarrierFree}
-              onChange={(e) => setIsBarrierFree(e.target.value)}
+              checked={isBarrierFree}
+              onChange={(e) => setIsBarrierFree(e.target.checked)}
             ></input>
           </div>
           <div class="form-check field p-0">
@@ -127,8 +123,8 @@ function EditWorkspaceForm({ toWorkspace, workspace, token }) {
             <input
               className="form-check-input mt-3"
               type="checkbox"
-              value={hasComputer}
-              onChange={(e) => setHasComputer(e.target.value)}
+              checked={hasComputer}
+              onChange={(e) => setHasComputer(e.target.checked)}
             ></input>
           </div>
           <div className="field pt-3">

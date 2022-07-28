@@ -11,7 +11,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   const getWorkspaces = () => {
     console.log("get workplaces");
     console.log(token);
-    const url = "http://localhost:8000/workspace/";
+    const url = "http://34.141.109.26:8000/workspace/";
     const request = {
       method: "GET",
       headers: {
@@ -40,7 +40,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   const deleteWorkspace = (id) => {
     console.log("delete workplaces");
     console.log(token);
-    const url = "http://localhost:8000/workspace/delete/" + id + "/";
+    const url = "http://34.141.109.26:8000/workspace/delete/" + id + "/";
     const request = {
       method: "DELETE",
       headers: {
@@ -65,7 +65,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   const getGroups = () => {
     console.log("get groups");
     console.log(token);
-    const url = "http://localhost:8000/workspace/group";
+    const url = "http://34.141.109.26:8000/workspace/group";
     const request = {
       method: "GET",
       headers: {
@@ -90,7 +90,7 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   const deleteGroup = (id) => {
     console.log("delete group");
     console.log(token);
-    const url = "http://localhost:8000/workspace/group/delete/" + id + "/";
+    const url = "http://34.141.109.26:8000/workspace/group/delete/" + id + "/";
     const request = {
       method: "DELETE",
       headers: {
@@ -130,7 +130,10 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
   }, []);
 
   const addWorkspaceButtonElement = (
-    <Button title="Create Workspace" onClick={() => groups.length > 0 && toCreateWorkspace()} />
+    <Button
+      title="Create Workspace"
+      onClick={() => groups.length > 0 && toCreateWorkspace()}
+    />
   );
   const addGroupButtonElement = (
     <Button title="Create Group" onClick={toCreateGroup} />
@@ -144,20 +147,30 @@ function Workspace({ toCreateGroup, toCreateWorkspace, toOverview, token }) {
             <th scope="col">Name</th>
             <th scope="col">Group</th>
             <th scope="col">Comment</th>
-            <th scope="col">Is Barrier Free</th>
-            <th scope="col">Has Computer</th>
+            <th scope="col" style={{lineHeight: "15px"}}>Is Barrier Free</th>
+            <th scope="col" style={{lineHeight: "15px"}}>Has Computer</th>
+            <th scope="col">Rating</th>
           </tr>
         </thead>
         <tbody>
           {workspaces &&
             workspaces.map(
-              ({ id, name, comment, is_barrier_free, has_computer, group }) => (
+              ({
+                id,
+                name,
+                comment,
+                is_barrier_free,
+                has_computer,
+                group,
+                workspace_rating,
+              }) => (
                 <tr>
                   <td>{name}</td>
                   <td>{group}</td>
-                  <td>{comment}</td>
+                  <td style={{lineHeight: "15px"}}>{comment}</td>
                   <td>{is_barrier_free ? "Yes" : "No"}</td>
                   <td>{has_computer ? "Yes" : "No"}</td>
+                  <td>{workspace_rating}</td>
                   <td>
                     <Button
                       onClick={() => {

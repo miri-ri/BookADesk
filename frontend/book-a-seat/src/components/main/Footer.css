@@ -6,11 +6,13 @@
   color: black;
   text-align: center;
 }
+
 .footer-left {
   display: inline-block;
   text-align: left;
   width: 80%;
 }
+
 .footer-right {
   display: inline-block;
   text-align: right;
