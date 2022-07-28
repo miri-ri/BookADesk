@@ -1,11 +1,15 @@
+# not used, function was scrapped
 import datetime
 
 from ..reservation.views import ReservationList
 from django.core.mail import send_mail
 from ..users.models import User
 
-
+ 
 class CoronaSendMails():
+    
+    # search for people who were near infected person
+    
     def searchPeople(self, sinceDay, user_id):
         for reservation in ReservationList().get_queryset():
             if reservation.user_id == user_id:
@@ -16,7 +20,8 @@ class CoronaSendMails():
 
     def _isInfectionPeriod(self, reservation_start, sinceDay):
         return reservation_start > datetime.date.today() - sinceDay
-
+    
+# send mail to people in vincinty 
     def sendMailToUser(self, user_id):
         user = User.objects.get(username=user_id) # TODO ist user_id username?
         send_mail(
